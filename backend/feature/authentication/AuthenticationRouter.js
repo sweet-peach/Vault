@@ -6,7 +6,7 @@ import AuthenticationService from "./AuthenticationService.js";
 
 const router = new Router();
 
-router.post('/api/login', validateRequest(
+router.post('/login', validateRequest(
         {
             email: Joi.string().email().required(),
             password: Joi.string().required()
@@ -19,7 +19,7 @@ router.post('/api/login', validateRequest(
     })
 )
 
-router.post('/api/register', validateRequest(
+router.post('/register', validateRequest(
         {
             email: Joi.string().email().required(),
             password: Joi.string().required()
@@ -32,7 +32,7 @@ router.post('/api/register', validateRequest(
     })
 )
 
-router.post('/api/me',
+router.post('/me',
     asyncWrapper(async (req, res) => {
         const token = req.headers.authorization.split(' ')[1]
         const response = await AuthenticationService.checkToken(token);

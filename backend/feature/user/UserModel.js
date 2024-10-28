@@ -1,12 +1,14 @@
-import {Schema, model} from "mongoose";
+import {Schema, model, Types} from "mongoose";
 
-const User = new Schema({
+const UserSchema = new Schema({
     email: {type: String, require: true, unique: true},
     password: {type: String, require: true},
     diskSpace: {type: Number, require: true, default:5024*10},
     usedSpace: {type: Number, require: true, default: 0},
     avatar: {type: String},
-    files: {type: Schema.Types.ObjectId, ref:'File'}
+    files: {type: Types.ObjectId, ref:'File'}
 })
 
-export const UserModel = model('User', User);
+const UserModel = model('User', UserSchema);
+
+export default UserModel;

@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 import 'dotenv/config'
 import {errorHandler} from "./core/middleware/errorHandler.js";
 import AuthenticationRouter from "./feature/authentication/AuthenticationRouter.js";
+import FilesRouter from "./feature/file/FilesRouter.js";
+import path from "node:path";
+import {fileURLToPath} from "url";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,9 +13,14 @@ const MONGODB_URL = process.env.MONGODB_URL;
 
 app.use(express.json());
 
-app.use(AuthenticationRouter)
+app.use('/api',AuthenticationRouter)
+app.use('/api/',FilesRouter)
 
 app.use(errorHandler);
+
+export function getBaseDirectory(){
+    return path.dirname(fileURLToPath(import.meta.url))
+}
 
 const start = async () => {
     try {
