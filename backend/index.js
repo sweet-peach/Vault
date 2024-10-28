@@ -5,12 +5,14 @@ import {errorHandler} from "./core/middleware/errorHandler.js";
 import AuthenticationRouter from "./feature/authentication/AuthenticationRouter.js";
 import FilesRouter from "./feature/file/FilesRouter.js";
 import path from "node:path";
+import fileUpload from "express-fileupload";
 import {fileURLToPath} from "url";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGODB_URL = process.env.MONGODB_URL;
 
+app.use(fileUpload({}))
 app.use(express.json());
 
 app.use('/api',AuthenticationRouter)

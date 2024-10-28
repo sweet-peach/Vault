@@ -2,6 +2,9 @@ import FileModel from "./FileModel.js";
 import { getBaseDirectory } from "../../index.js";
 import path from "node:path";
 import * as fs from "node:fs";
+import UserModel from "../user/UserModel.js";
+import NoSpaceOnDiskError from "./errors/NoSpaceOnDiskError.js";
+import FileAlreadyExists from "./errors/FileAlreadyExists.js";
 
 const baseDir = getBaseDirectory();
 const filesRootDir = process.env.FILES_DIRECTORY || path.join(baseDir, 'files');
@@ -38,7 +41,7 @@ class FileService {
         const parentDirectory = parentDirectoryId ? await FileModel.findById(parentDirectoryId).exec() : null;
 
         if (parentDirectory) {
-            newDirectory.path = `${parentDirectory.path}\\${newDirectory.name}`;
+            newDirectory.path = path.join(parentDirectory.path, newDirectory.name);
             parentDirectory.childs.push(newDirectory._id);
             await parentDirectory.save();
         } else {
@@ -70,7 +73,46 @@ class FileService {
 
         return files;
     }
-    static async uploadFile() {}
+    static async uploadFile(file,userId, directoryId) {
+        const parentDirectory = directoryId ? await FileModel.findOne({user: userId, _id: directoryId}).exec() : null;
+        const user = await UserModel.findOne({_id: userId}).exec();
+
+        if (user.usedSpace + file.size > user.diskSpace) {
+            throw new NoSpaceOnDiskError("No more space on disk")
+        }
+
+        let filePath;
+        if(parentDirectory){
+            filePath = path.join(parentDirectory.path,file.name) ;
+        } else {
+            filePath = `${file.name}`;
+        }
+
+        const absoluteFilePath =  path.join(filesRootDir,user.id,filePath);
+        if (fs.existsSync(absoluteFilePath)) {
+            throw new FileAlreadyExists(`File ${file.name} already exists`)
+        }
+
+        user.usedSpace += file.size;
+
+        file.mv(absoluteFilePath);
+
+        const type = file.name.split('.').pop();
+
+        const createdFile = new FileModel({
+            name: file.name,
+            type: type,
+            size: file.size,
+            path: filePath.toString(),
+            parent: parentDirectory?._id,
+            user: userId
+        })
+
+        await createdFile.save();
+        await user.save();
+
+        return createdFile;
+    }
     static async downloadFile() {}
     static async searchFile() {}
 }

@@ -1,5 +1,9 @@
-#IDE
+# IDE
 .idea
+
+# Directories for user files
+files
+static
 
 # Logs
 logs
