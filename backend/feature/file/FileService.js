@@ -5,6 +5,7 @@ import * as fs from "node:fs";
 import UserModel from "../user/UserModel.js";
 import NoSpaceOnDiskError from "./errors/NoSpaceOnDiskError.js";
 import FileAlreadyExists from "./errors/FileAlreadyExists.js";
+import FileNotFoundError from "./errors/FileNotFoundError.js";
 
 const baseDir = getBaseDirectory();
 const filesRootDir = process.env.FILES_DIRECTORY || path.join(baseDir, 'files');
@@ -113,7 +114,16 @@ class FileService {
 
         return createdFile;
     }
-    static async downloadFile() {}
+    static async getFile(fileId, ownerId) {
+        const file = await FileModel.findOne({user: userId, _id: fileId}).exec();
+        if(!file){
+            throw new FileNotFoundError("File not found");
+        }
+        return file;
+    }
+    static getFilePath(file) {
+        return path.join(filesRootDir,file.user,file.path);
+    }
     static async searchFile() {}
 }
 

@@ -67,8 +67,8 @@ FilesRouter.post('/files/upload',
         }
 
         const uploadedFiles = [];
-        if(Array.isArray(files)){
-            for(const file of files){
+        if (Array.isArray(files)) {
+            for (const file of files) {
                 const createdFile = await FileService.uploadFile(file, user.id, directoryId);
                 uploadedFiles.push(createdFile);
             }
@@ -77,6 +77,20 @@ FilesRouter.post('/files/upload',
             uploadedFiles.push(createdFile);
         }
         return res.json(uploadedFiles);
+    })
+)
+
+FilesRouter.get('/files/download',
+    authorizationMiddleware,
+    validateRequest({
+        fileId: Joi.string().required()
+    }),
+    asyncWrapper(async (req, res)=>{
+        const {fileId} = req.parsedData;
+        const user = req.user;
+        const file = await FileService.getFile(fileId, user.id);
+        const path = FileService.getFilePath(file);
+        return res.download(path, file.name);
     })
 )
 
