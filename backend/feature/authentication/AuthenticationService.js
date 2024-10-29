@@ -4,9 +4,10 @@ import UserAlreadyExistsError from "./errors/UserAlreadyExistsError.js";
 import jwt from "jsonwebtoken";
 import UserModel from "../user/UserModel.js";
 import FileService from "../file/FileService.js";
+import config from "../../core/config.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_EXPIRATION_IN_HOURS = process.env.JWT_EXPIRATION_IN_HOURS | 24*30;
+const JWT_EXPIRATION_IN_HOURS = config.jwt_expiration_in_hours | 24*30;
 class AuthenticationService{
     static async login(email, password){
         const user = await UserModel.findOne({email: email}).exec();

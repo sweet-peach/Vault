@@ -7,6 +7,7 @@ import FilesRouter from "./feature/file/FilesRouter.js";
 import path from "node:path";
 import fileUpload from "express-fileupload";
 import {fileURLToPath} from "url";
+import UserRouter from "./feature/user/UserRouter.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,6 +18,7 @@ app.use(express.json());
 
 app.use('/api',AuthenticationRouter)
 app.use('/api/',FilesRouter)
+app.use('/api/',UserRouter)
 
 app.use(errorHandler);
 

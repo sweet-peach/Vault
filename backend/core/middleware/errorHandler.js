@@ -4,6 +4,7 @@ import NoSpaceOnDiskError from "../../feature/file/errors/NoSpaceOnDiskError.js"
 import FileAlreadyExists from "../../feature/file/errors/FileAlreadyExists.js";
 import NoFileProvided from "../../feature/file/errors/NoFileProvided.js";
 import FileNotFoundError from "../../feature/file/errors/FileNotFoundError.js";
+import BadAvatarError from "../../feature/user/errors/BadAvatarError.js";
 
 export function errorHandler(err, req, res, next) {
     if (err instanceof UserAlreadyExistsError) {
@@ -27,6 +28,10 @@ export function errorHandler(err, req, res, next) {
     }
 
     if (err instanceof FileNotFoundError) {
+        return res.status(err.status).json({ message: err.message });
+    }
+
+    if (err instanceof BadAvatarError) {
         return res.status(err.status).json({ message: err.message });
     }
 

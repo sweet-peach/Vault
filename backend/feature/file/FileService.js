@@ -6,9 +6,10 @@ import UserModel from "../user/UserModel.js";
 import NoSpaceOnDiskError from "./errors/NoSpaceOnDiskError.js";
 import FileAlreadyExists from "./errors/FileAlreadyExists.js";
 import FileNotFoundError from "./errors/FileNotFoundError.js";
+import config from "../../core/config.js";
 
 const baseDir = getBaseDirectory();
-const filesRootDir = process.env.FILES_DIRECTORY || path.join(baseDir, 'files');
+const filesRootDir = config.avatars_directory || path.join(baseDir, 'files');
 
 if (!fs.existsSync(filesRootDir)) {
     fs.mkdirSync(filesRootDir, { recursive: true });
