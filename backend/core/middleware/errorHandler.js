@@ -3,6 +3,7 @@ import InvalidCredentials from "../../feature/authentication/errors/InvalidCrede
 import NoSpaceOnDiskError from "../../feature/file/errors/NoSpaceOnDiskError.js";
 import FileAlreadyExists from "../../feature/file/errors/FileAlreadyExists.js";
 import NoFileProvided from "../../feature/file/errors/NoFileProvided.js";
+import FileNotFoundError from "../../feature/file/errors/FileNotFoundError.js";
 
 export function errorHandler(err, req, res, next) {
     if (err instanceof UserAlreadyExistsError) {
@@ -22,6 +23,10 @@ export function errorHandler(err, req, res, next) {
     }
 
     if (err instanceof NoFileProvided) {
+        return res.status(err.status).json({ message: err.message });
+    }
+
+    if (err instanceof FileNotFoundError) {
         return res.status(err.status).json({ message: err.message });
     }
 
