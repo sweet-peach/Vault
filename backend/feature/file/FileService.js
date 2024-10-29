@@ -115,14 +115,21 @@ class FileService {
         return createdFile;
     }
     static async getFile(fileId, ownerId) {
-        const file = await FileModel.findOne({user: userId, _id: fileId}).exec();
+        const file = await FileModel.findOne({user: ownerId, _id: fileId}).exec();
         if(!file){
             throw new FileNotFoundError("File not found");
         }
         return file;
     }
+
+    static async getFilesByName(searchName, ownerId) {
+        let files = await FileModel.find({user: ownerId}).exec();
+        files = files.filter(file => file.name.includes(searchName));
+
+        return files;
+    }
     static getFilePath(file) {
-        return path.join(filesRootDir,file.user,file.path);
+        return path.join(filesRootDir,file.user.toString(),file.path);
     }
     static async searchFile() {}
 }

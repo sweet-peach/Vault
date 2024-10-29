@@ -94,5 +94,18 @@ FilesRouter.get('/files/download',
     })
 )
 
+FilesRouter.get('/files/search',
+    authorizationMiddleware,
+    validateRequest({
+        fileName: Joi.string().required()
+    }),
+    asyncWrapper(async (req, res)=>{
+        const {fileName} = req.parsedData;
+        const user = req.user;
+        const files = await FileService.getFilesByName(fileName, user.id);
+        return res.json(files);
+    })
+)
+
 
 export default FilesRouter;
