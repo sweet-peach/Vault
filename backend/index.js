@@ -16,7 +16,7 @@ const MONGODB_URL = process.env.MONGODB_URL;
 app.use(fileUpload({}))
 app.use(express.json());
 
-app.use('/api',AuthenticationRouter)
+app.use('/api/',AuthenticationRouter)
 app.use('/api/',FilesRouter)
 app.use('/api/',UserRouter)
 
