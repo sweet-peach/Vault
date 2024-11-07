@@ -7,7 +7,18 @@ import FileService from "../file/FileService.js";
 import config from "../../core/config.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_EXPIRATION_IN_HOURS = config.jwt_expiration_in_hours | 24*30;
+const JWT_EXPIRATION = config.jwt_expiration_in_ms | 7 * 24 * 60 * 60 * 1000;
+
+function createToken(userId){
+    const expiresAt = new Date(Date.now() + JWT_EXPIRATION)
+    const token = jwt.sign({id: userId},JWT_SECRET,{expiresIn: JWT_EXPIRATION});
+
+    return {
+        expiresAt: expiresAt,
+        token: token
+    }
+}
+
 class AuthenticationService{
     static async login(email, password){
         const user = await UserModel.findOne({email: email}).exec();
@@ -20,7 +31,7 @@ class AuthenticationService{
             throw new InvalidCredentials("Invalid user email or password")
         }
 
-        const token = jwt.sign({id: user.id},JWT_SECRET,{expiresIn: `${JWT_EXPIRATION_IN_HOURS}h`});
+        const token = createToken(user.id);
 
         return {
             user: {
@@ -30,7 +41,7 @@ class AuthenticationService{
                 usedSpace: user.usedSpace,
                 avatar: user.avatar
             },
-            jwt: token
+            token: token
         };
     }
     static async register(email, password){
@@ -44,7 +55,7 @@ class AuthenticationService{
 
         await FileService.createUserDirectory(user.id);
 
-        const token = jwt.sign({id: user.id},JWT_SECRET,{expiresIn: `${JWT_EXPIRATION_IN_HOURS}h`});
+        const token = createToken(user.id);
 
         return {
             user: {
@@ -54,7 +65,7 @@ class AuthenticationService{
                 usedSpace: user.usedSpace,
                 avatar: user.avatar
             },
-            jwt: token
+            token: token
         };
     }
     static async checkToken(token){

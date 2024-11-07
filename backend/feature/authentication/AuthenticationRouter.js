@@ -7,18 +7,6 @@ import UserModel from "../user/UserModel.js";
 
 const router = new Router();
 
-router.post('/login', validateRequest(
-        {
-            email: Joi.string().email().required(),
-            password: Joi.string().required()
-        }),
-    asyncWrapper(async (req, res) => {
-        const {email, password} = req.parsedData;
-        const response = await AuthenticationService.login(email, password);
-
-        return res.json(response)
-    })
-)
 
 router.post('/check-email-existence', validateRequest(
         {
@@ -37,6 +25,26 @@ router.post('/check-email-existence', validateRequest(
     })
 )
 
+router.post('/login', validateRequest(
+        {
+            email: Joi.string().email().required(),
+            password: Joi.string().required()
+        }),
+    asyncWrapper(async (req, res) => {
+        const {email, password} = req.parsedData;
+        const response = await AuthenticationService.login(email, password);
+        const {token, expiresAt} = response.token;
+
+        return res.cookie('token', token, {
+            expires: expiresAt,
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'Strict'
+        }).json(response);
+    })
+)
+
+
 router.post('/register', validateRequest(
         {
             email: Joi.string().email().required(),
@@ -45,8 +53,14 @@ router.post('/register', validateRequest(
     asyncWrapper(async (req, res) => {
         const {email, password} = req.parsedData;
         const response = await AuthenticationService.register(email, password);
+        const {token, expiresAt} = response.token;
 
-        return res.json(response);
+        return res.cookie('token', token, {
+            expires: expiresAt,
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'Strict'
+        }).json(response);
     })
 )
 
