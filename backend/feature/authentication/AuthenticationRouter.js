@@ -39,11 +39,10 @@ router.post('/login', validateRequest(
             expires: expiresAt,
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Strict'
+            sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'Lax',
         }).json(response);
     })
 )
-
 
 router.post('/register', validateRequest(
         {
@@ -59,7 +58,7 @@ router.post('/register', validateRequest(
             expires: expiresAt,
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Strict'
+            sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'Lax',
         }).json(response);
     })
 )
