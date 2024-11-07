@@ -1,8 +1,58 @@
 'use client'
 
-import {useActionState} from "react";
-import {handleAuthentication} from "@/app/auth/actions/handleAuthentication";
+import {useActionState, useState} from "react";
 import {useFormStatus} from "react-dom";
+import {handleCheckEmail, handleLogin, handleRegister} from "@/app/auth/actions";
+
+function EmailForm({setStep, setEmail, email}) {
+    const [actionState, action] = useActionState(async (state, formData) => {
+        return await handleCheckEmail(state, formData, setStep, setEmail)
+    }, {})
+    const {errors} = actionState;
+
+    return (
+        <form action={action}>
+            <input
+                id="email"
+                defaultValue={email}
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+            />
+            {errors?.email && <p className="error">{errors.email}</p>}
+            <SubmitButton/>
+        </form>
+    );
+}
+
+function RegisterForm({setStep, email}) {
+    const [actionState, action] = useActionState(handleRegister, {})
+    const {errors} = actionState;
+
+    return (
+        <form action={action}>
+            <input type="hidden" name="email" defaultValue={email}/>
+            <input id="password" name="password" type="password" placeholder="Enter password"/>
+            {errors?.password && <p className="error">{errors.password}</p>}
+            <SubmitButton/>
+        </form>
+    );
+
+}
+
+function LoginForm({setStep, email}) {
+    const [actionState, action] = useActionState(handleLogin, {})
+    const {errors} = actionState;
+
+    return (
+        <form action={action}>
+            <input type="hidden" name="email" defaultValue={email}/>
+            <input id="password" name="password" type="password" placeholder="Enter password"/>
+            {errors?.password && <p className="error">{errors.password}</p>}
+            <SubmitButton/>
+        </form>
+    );
+}
 
 function SubmitButton() {
     const {pending} = useFormStatus()
@@ -15,38 +65,16 @@ function SubmitButton() {
 }
 
 export default function Auth() {
-    const [state, action] = useActionState(handleAuthentication, {})
+    const [email, setEmail] = useState("");
+    const [step, setStep] = useState("email");
 
-
-    if(state.login){
-        return (
-            <>
-                <form action={action}>
-                    <div>
-                        <label htmlFor="email">Email</label>
-                        <input id="email" name="email" placeholder="Name"/>
-                    </div>
-                    {state?.errors?.email && <p>{state.errors.email}</p>}
-
-                    <SubmitButton/>
-                </form>
-            </>
-        );
+    if (step === 'email') {
+        return <EmailForm setStep={setStep} email={email} setEmail={setEmail}/>;
     }
-    if(state.register){
-
+    if (step === 'register') {
+        return <RegisterForm setStep={setStep} email={email}/>;
     }
-    return (
-        <>
-            <form action={action}>
-                <div>
-                    <label htmlFor="email">Email</label>
-                    <input id="email" name="email" placeholder="Name"/>
-                </div>
-                {state?.errors?.email && <p>{state.errors.email}</p>}
-
-                <SubmitButton/>
-            </form>
-        </>
-    );
+    if (step === 'login') {
+        return <LoginForm setStep={setStep} email={email}/>;
+    }
 }

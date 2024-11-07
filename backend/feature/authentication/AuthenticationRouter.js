@@ -3,7 +3,6 @@ import validateRequest from "../../core/middleware/validateRequest.js";
 import Joi from "joi";
 import asyncWrapper from "../../core/middleware/asyncWrapper.js";
 import AuthenticationService from "./AuthenticationService.js";
-import UserService from "../user/UserService.js";
 import UserModel from "../user/UserModel.js";
 
 const router = new Router();
@@ -30,13 +29,11 @@ router.post('/check-email-existence', validateRequest(
 
         const candidate = await UserModel.findOne({email: email}).exec();
 
-        if(candidate){
+        if (candidate) {
             return res.json({found: true})
-        } else{
-            return res.status(404).json({found: false});
+        } else {
+            return res.json({found: false})
         }
-
-
     })
 )
 
@@ -52,8 +49,6 @@ router.post('/register', validateRequest(
         return res.json(response);
     })
 )
-
-
 
 
 export default router;

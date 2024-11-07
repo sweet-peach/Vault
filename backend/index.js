@@ -8,6 +8,7 @@ import path from "node:path";
 import fileUpload from "express-fileupload";
 import {fileURLToPath} from "url";
 import UserRouter from "./feature/user/UserRouter.js";
+import corsMiddleware from "./core/middleware/corsMiddleware.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +16,10 @@ const MONGODB_URL = process.env.MONGODB_URL;
 
 app.use(fileUpload({}))
 app.use(express.json());
+
+if(process.env.NODE_ENV === 'DEVELOPMENT'){
+    app.use(corsMiddleware);
+}
 
 app.use('/api/',AuthenticationRouter)
 app.use('/api/',FilesRouter)

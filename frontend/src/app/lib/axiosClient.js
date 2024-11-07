@@ -1,16 +1,16 @@
 import axios from 'axios';
 
 const axiosClient = axios.create({
-    baseURL: import.meta.env.NEXT_PUBLIC_BACKEND_BASE_URL
+    baseURL: process.env.NEXT_PUBLIC_BACKEND_BASE_URL
 });
 
 
 axiosClient.interceptors.request.use(config => {
-    if (localStorage.token) {
-        console.log("test");
-        config.headers.Authorization = `Bearer ${localStorage.token}`;
-        return config;
+    const token = localStorage.getItem('token')
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
     }
+    return config;
 });
 
 axiosClient.interceptors.response.use(
