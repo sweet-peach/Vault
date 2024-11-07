@@ -10,6 +10,9 @@ axiosClient.interceptors.request.use(config => {
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
+    if (process.env.NEXT_PUBLIC_NODE_ENV === 'development') {
+        config.withCredentials = true;
+    }
     return config;
 });
 

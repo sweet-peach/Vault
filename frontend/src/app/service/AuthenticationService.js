@@ -7,12 +7,12 @@ class AuthenticationService {
     }
 
     static async login(email, password) {
-        const response = await axiosClient.post('/api/login', {email, password})
+        const response = await axiosClient.post('/api/login', {email, password}, {withCredentials: true})
         return response.data;
     }
 
     static async register(email, password) {
-        const response = await axiosClient.post('/api/register', {email, password})
+        const response = await axiosClient.post('/api/register', {email, password}, {withCredentials: true})
         return response.data;
     }
 }

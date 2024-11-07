@@ -34,11 +34,11 @@ export async function handleLogin(state, formData){
 
     try {
         const data = await AuthenticationService.login(email, password);
-        console.log("redirect");
-        window.document.location = "/drive"
+        // window.document.location = "/drive"
     } catch (e) {
         return {errors: {request: e}}
     }
+    return {};
 }
 
 
@@ -51,8 +51,9 @@ export async function handleRegister(state, formData){
 
     try {
         const data = await AuthenticationService.register(email, password);
-        window.document.location = "/drive"
+        // window.document.location = "/drive"
     } catch (e) {
         return {errors: {request: e}}
     }
+    return {};
 }
