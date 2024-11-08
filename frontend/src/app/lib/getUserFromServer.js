@@ -2,8 +2,9 @@ import axios from "axios";
 import {cookies} from "next/headers";
 
 export async function getUserDataFromServer() {
-    const token = await cookies().get('token').value;
-    console.log('token',token);
+    const userCookies = await cookies();
+    const token = userCookies.get('token').value
+
     if (!token) return null;
 
     try {
