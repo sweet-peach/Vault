@@ -7,7 +7,6 @@ import UserModel from "../user/UserModel.js";
 
 const router = new Router();
 
-
 router.post('/check-email-existence', validateRequest(
         {
             email: Joi.string().email().required(),
