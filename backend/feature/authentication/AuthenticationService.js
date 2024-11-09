@@ -23,12 +23,12 @@ class AuthenticationService{
     static async login(email, password){
         const user = await UserModel.findOne({email: email}).exec();
         if(!user){
-            throw new InvalidCredentials("Invalid user email or password");
+            throw new InvalidCredentials("Invalid user credentials");
         }
 
         const isPassValid = bcrypt.compareSync(password,user.password);
         if(!isPassValid){
-            throw new InvalidCredentials("Invalid user email or password")
+            throw new InvalidCredentials("Invalid user credentials")
         }
 
         const token = createToken(user.id);
