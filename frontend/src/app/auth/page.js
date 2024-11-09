@@ -3,6 +3,7 @@ import styles from "./auth.module.scss";
 import {useActionState, useRef, useState} from "react";
 import {useFormStatus} from "react-dom";
 import {handleCheckEmail, handleLogin, handleRegister} from "@/app/auth/actions";
+import {useRouter} from "next/navigation";
 
 function EmailForm({setStep, setEmail, email}) {
     const [actionState, action] = useActionState(async (state, formData) => {
@@ -33,9 +34,9 @@ function EmailForm({setStep, setEmail, email}) {
     );
 }
 
-function RegisterForm({setStep, email}) {
+function RegisterForm({setStep, email, router}) {
     const formRef = useRef(null);
-    const [actionState, action] = useActionState(handleRegister, {})
+    const [actionState, action] = useActionState(async (state, formData)=> {return await handleRegister(state, formData, router)}, {})
     const {errors} = actionState;
 
     return (
@@ -61,9 +62,9 @@ function RegisterForm({setStep, email}) {
 
 }
 
-function LoginForm({setStep, email}) {
+function LoginForm({setStep, email, router}) {
     const formRef = useRef(null);
-    const [actionState, action] = useActionState(handleLogin, {})
+    const [actionState, action] = useActionState(async (state, formData)=>{return await handleLogin(state, formData, router)}, {})
     const {errors} = actionState;
 
     return (
@@ -100,14 +101,15 @@ function SubmitButton({formRef, text}) {
 export default function Auth() {
     const [email, setEmail] = useState("");
     const [step, setStep] = useState("email");
+    const router = useRouter();
 
     if (step === 'email') {
-        return <EmailForm setStep={setStep} email={email} setEmail={setEmail}/>;
+        return <EmailForm router={router} setStep={setStep} email={email} setEmail={setEmail}/>;
     }
     if (step === 'register') {
-        return <RegisterForm setStep={setStep} email={email}/>;
+        return <RegisterForm router={router} setStep={setStep} email={email}/>;
     }
     if (step === 'login') {
-        return <LoginForm setStep={setStep} email={email}/>;
+        return <LoginForm router={router} setStep={setStep} email={email}/>;
     }
 }

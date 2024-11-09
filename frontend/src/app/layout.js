@@ -1,5 +1,6 @@
 import "./globals.scss";
 import {Inter} from 'next/font/google'
+import NavigationTransition from "@/app/components/NavigationTransition/NavigationTransition";
 
 const inter = Inter({
     subsets: ['latin'],
@@ -11,14 +12,15 @@ export const metadata = {
     description: "Cloud storage",
 };
 
-export default async function RootLayout({children}) {
+export default function RootLayout({children}) {
+
     return (
         <html lang="en">
         <head>
             <link rel="icon" href="/favicon.ico" sizes="any"/>
         </head>
         <body>
-        {children}
+            <NavigationTransition>{children}</NavigationTransition>
         </body>
         </html>
     );

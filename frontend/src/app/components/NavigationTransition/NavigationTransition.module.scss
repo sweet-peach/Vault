@@ -1,0 +1,36 @@
+.loader-wrapper{
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-box{
+    color: var(--text-color-invert);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    & p {
+        font-size: var(--text-sm);
+    }
+}
+.logoContainer{
+    display: flex;
+    align-items: center;
+    font-style: italic;
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-small);
+    & img {
+        margin-right: var(--space-tiny);
+        animation: spin 3s linear infinite;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

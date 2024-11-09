@@ -6,7 +6,6 @@ const PasswordSchema= z
     .trim()
     .min(1, { message: 'Password cannot be empty' });
 
-
 export async function handleCheckEmail(state, formData, setStep, setEmail){
     const email = formData.get('email');
 
@@ -31,7 +30,7 @@ export async function handleCheckEmail(state, formData, setStep, setEmail){
 }
 
 
-export async function handleLogin(state, formData){
+export async function handleLogin(state, formData, router){
     const email = formData.get('email');
     const password = formData.get('password');
 
@@ -40,7 +39,7 @@ export async function handleLogin(state, formData){
 
     try {
         const data = await AuthenticationService.login(email, password);
-        window.document.location = "/drive"
+        await router.push('/drive');
     } catch (e) {
         return {errors: {request: e.message}}
     }
@@ -48,7 +47,7 @@ export async function handleLogin(state, formData){
 }
 
 
-export async function handleRegister(state, formData){
+export async function handleRegister(state, formData, router){
     const email = formData.get('email');
     const password = formData.get('password');
 
@@ -57,7 +56,7 @@ export async function handleRegister(state, formData){
 
     try {
         const data = await AuthenticationService.register(email, password);
-        window.document.location = "/drive"
+        await router.push('/drive');
     } catch (e) {
         return {errors: {request: e.message}}
     }
