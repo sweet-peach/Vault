@@ -1,0 +1,13 @@
+:root{
+  --background-color: #000000;
+  --middleground-color:#EBEBEB;
+  --foreground-color:#FFFFFF;
+
+  --text-color: #000;
+  --text-color-invert: #fff;
+}
+
+body{
+  background: var(--background-color);
+  color: var(--text-color);
+}
