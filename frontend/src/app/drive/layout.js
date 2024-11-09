@@ -10,15 +10,11 @@ export default async function DriveLayout({children}) {
     }
 
     return (
-        <html lang="en">
-        <body>
         <div>
             Vault
             <div>
                 {children}
             </div>
         </div>
-        </body>
-        </html>
     );
 }

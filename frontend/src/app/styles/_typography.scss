@@ -17,13 +17,16 @@
   --baseline: 24px;
 
   /* spacing values */
-  --space-sm: calc(var(--baseline) / 2);
-  --space-md: var(--baseline);
+  --space-tiny: calc(var(--baseline) / 4.8); //5
+  --space-extra-small: calc(var(--baseline) / 2.4); //10
+  --space-small: calc(var(--baseline) / 1.6); //15
+  --space-medium: var(--baseline); //24
   --space-lg: calc(var(--baseline) * 2);
   --space-xl: calc(var(--baseline) * 3);
 }
-
+* {
+  font-family: var(--font-primary), sans-serif;
+}
 body {
   font-size: var(--text-base-size);
-  font-family: var(--font-primary), sans-serif;
 }
