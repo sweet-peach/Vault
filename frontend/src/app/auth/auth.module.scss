@@ -18,7 +18,6 @@
     width: 500px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     & .heading{
         align-self: flex-start;
         color: var(--text-color);
@@ -26,6 +25,16 @@
     & .error{
         margin-top: var(--space-tiny);
         color: var(--error-color);
+    }
+    & form{
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between
+    }
+    & .inputs{
+        margin-top: auto;
+        margin-bottom: auto;
     }
     & .actions{
         display: flex;

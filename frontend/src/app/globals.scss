@@ -46,6 +46,7 @@ button{
         padding: var(--space-small) ;
         border-radius: 7px;
     }
+
     &.secondary{
         background: var(--button-secondary-background);
         color: var(--text-color);
@@ -75,5 +76,10 @@ button{
     }
     &.white{
         background: var(--);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
     }
 }
