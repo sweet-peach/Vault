@@ -62,5 +62,12 @@ router.post('/register', validateRequest(
     })
 )
 
+router.post('/logout',
+    asyncWrapper(async (req, res) => {
+        res.clearCookie('token');
+        res.status(200).send('Logged out successfully');
+    })
+)
+
 
 export default router;
