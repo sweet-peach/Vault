@@ -1,0 +1,12 @@
+.profile-picture-wrapper{
+    position: relative;
+    display: flex;
+    img{
+        border-radius: 100%;
+    }
+    button{
+        position: absolute;
+        bottom: 10px;
+        left: 50px;
+    }
+}

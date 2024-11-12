@@ -1,7 +1,27 @@
 import path from 'path';
 
+
+let images = {};
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+let [protocol, hostname, port] = backendUrl.split(":");
+hostname = hostname.replace(/\//g, '');
+hostname = hostname.replace(/\\/g, '');
+if(process.env.NEXT_PUBLIC_NODE_ENV === 'development'){
+    images = {
+        remotePatterns: [
+            {
+                protocol: protocol,
+                hostname: hostname,
+                port: port ? port : "",
+                pathname: '/avatar/**',
+            },
+        ],
+    }
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    images: images,
     sassOptions: {
         silenceDeprecations: ['legacy-js-api'],
     },

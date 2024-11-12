@@ -1,0 +1,17 @@
+.container{
+    padding: var(--space-extra-small);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    & footer{
+        padding-top: var(--space-extra-small);
+        display: flex;
+        justify-content: space-between;
+    }
+}
+.content{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}

@@ -25,11 +25,11 @@ export function NavigationLoader() {
 
 export default function NavigationTransition({children}) {
     const [isPending, startTransition] = useTransition();
-
+    //TODO NavigationLoader should not cover the page during the transition
     return (
-        <Suspense fallback={<NavigationLoader />}>
-            {isPending && <NavigationLoader/>}
-                {children}
-        </Suspense>
+        <>{children}</>
+        // <Suspense fallback={<NavigationLoader />}>
+        //     {isPending && <NavigationLoader/>}
+        // </Suspense>
     )
 }

@@ -9,6 +9,7 @@ import fileUpload from "express-fileupload";
 import {fileURLToPath} from "url";
 import UserRouter from "./feature/user/UserRouter.js";
 import corsMiddleware from "./core/middleware/corsMiddleware.js";
+import config from "./core/config.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,7 +21,7 @@ app.use(express.json());
 if(process.env.NODE_ENV === 'DEVELOPMENT'){
     app.use(corsMiddleware);
 }
-
+app.use('/avatar/', express.static(config.avatars_directory));
 app.use('/api/',AuthenticationRouter)
 app.use('/api/',FilesRouter)
 app.use('/api/',UserRouter)

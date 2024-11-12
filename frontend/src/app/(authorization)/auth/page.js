@@ -2,8 +2,8 @@
 import styles from "./auth.module.scss";
 import {useActionState, useRef, useState} from "react";
 import {useFormStatus} from "react-dom";
-import {handleCheckEmail, handleLogin, handleRegister} from "@/app/auth/actions";
 import {useRouter} from "next/navigation";
+import {handleCheckEmail, handleLogin, handleRegister} from "@/app/(authorization)/auth/actions";
 
 function EmailForm({setStep, setEmail, email}) {
     const [actionState, action] = useActionState(async (state, formData) => {
@@ -77,7 +77,7 @@ function LoginForm({setStep, email, router}) {
                     <p className={styles.error}>{errors ? errors.password || errors.request : ""}&nbsp;</p>
                 </div>
                 <div className={styles.actions}>
-                    <SubmitButton formRef={formRef} text={"Login"}/>
+                    <SubmitButton text={"Login"}/>
                     <button onClick={() => {
                         setStep("email")
                     }} className="outline full">Back
@@ -89,7 +89,7 @@ function LoginForm({setStep, email, router}) {
     );
 }
 
-function SubmitButton({formRef, text}) {
+function SubmitButton({text}) {
     const {pending} = useFormStatus()
     return (
         <button className="primary full" disabled={pending} type="submit">

@@ -5,10 +5,28 @@ import path from "node:path";
 import fs from "node:fs";
 import {getBaseDirectory} from "../../index.js";
 import {v4} from "uuid";
+import InvalidCredentials from "../authentication/errors/InvalidCredentials.js";
+import UserNotFoundError from "./errors/UserNotFoundError.js";
+import bcrypt from "bcryptjs";
 
-const validAvatarExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.tiff', '.svg', '.ico', '.heic'];
+const validAvatarMimeTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+];
 
-const baseDir = getBaseDirectory();
+const mimeToExtension = {
+    'image/jpeg': ['.jpg', '.jpeg'],
+    'image/png': ['.png'],
+    'image/gif': ['.gif'],
+    'image/bmp': ['.bmp'],
+    'image/webp': ['.webp'],
+    'image/tiff': ['.tiff'],
+    'image/svg+xml': ['.svg'],
+    'image/vnd.microsoft.icon': ['.ico'],
+    'image/heic': ['.heic']
+};
+
 const avatarsRootDir = config.avatars_directory || path.join(baseDir, 'avatars');
 
 if (!fs.existsSync(avatarsRootDir)) {
@@ -18,8 +36,7 @@ if (!fs.existsSync(avatarsRootDir)) {
 class UserService {
 
     static async uploadAvatar(newAvatar, userId) {
-        const extension = newAvatar.name.split('.')[1];
-        if (!validAvatarExtensions.includes(`.${extension}`)) {
+        if (!validAvatarMimeTypes.includes(newAvatar.mimetype)) {
             throw new BadAvatarError("Invalid avatar extension")
         }
         if (newAvatar.size > config.avatar_maximum_size) {
@@ -28,15 +45,30 @@ class UserService {
         const user = await UserModel.findById(userId).exec();
 
         if (user.avatar) {
-            fs.rmSync(path.join(avatarsRootDir, user.avatar));
+            try {
+                fs.rmSync(path.join(avatarsRootDir, user.avatar));
+            }catch (e) {}
         }
 
-        const uuidAvatarName = `${v4()}.${extension}`;
+        const uuidAvatarName = `${v4()}${mimeToExtension[newAvatar.mimetype]}`;
         newAvatar.mv(path.join(avatarsRootDir, uuidAvatarName));
 
         user.avatar = uuidAvatarName;
         await user.save();
         return uuidAvatarName;
+    }
+
+    static async changePassword(userId, oldPassword, newPassword){
+        const user = await UserModel.findById(userId).exec();
+        if(!user){
+            throw new UserNotFoundError("User not found");
+        }
+        const isPassValid = bcrypt.compareSync(oldPassword,user.password);
+        if(!isPassValid){
+            throw new InvalidCredentials("old password isn't valid")
+        }
+        user.password = await bcrypt.hash(newPassword, 8);
+        await user.save();
     }
 
     static async deleteAvatar(userId) {

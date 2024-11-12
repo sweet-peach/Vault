@@ -6,6 +6,7 @@ import AuthenticationService from "./AuthenticationService.js";
 import UserModel from "../user/UserModel.js";
 
 const router = new Router();
+// TODO make token splitting so user could logout being offline
 
 router.post('/check-email-existence', validateRequest(
         {

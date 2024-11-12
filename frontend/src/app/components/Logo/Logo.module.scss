@@ -1,0 +1,11 @@
+.logo-container {
+    display: flex;
+    align-items: center;
+    font-style: italic;
+    &.inverted{
+        color: var(--text-color-invert);
+    }
+    & img {
+        margin-right: var(--space-tiny);
+    }
+}

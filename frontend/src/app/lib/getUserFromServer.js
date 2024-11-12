@@ -1,6 +1,16 @@
 import axios from "axios";
 import {cookies} from "next/headers";
 
+axios.interceptors.request.use((request) => {
+    console.log('Starting Request');
+    return request;
+});
+
+axios.interceptors.response.use((response) => {
+    console.log('Response:' );
+    return response;
+});
+
 export async function getUserDataFromServer() {
     const userCookies = await cookies();
 
@@ -15,7 +25,7 @@ export async function getUserDataFromServer() {
             },
         });
 
-        return response.data;
+        return response.data.user;
     } catch (error) {
         if(error.response && error.response.status === 401){
             return null;

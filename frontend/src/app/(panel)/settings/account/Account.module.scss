@@ -1,0 +1,9 @@
+.password-block{
+    & form{
+        display: flex;
+        gap: var(--space-extra-small);
+        & input{
+            width: 100%;
+        }
+    }
+}

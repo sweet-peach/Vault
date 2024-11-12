@@ -5,6 +5,7 @@ import FileAlreadyExists from "../../feature/file/errors/FileAlreadyExists.js";
 import NoFileProvided from "../../feature/file/errors/NoFileProvided.js";
 import FileNotFoundError from "../../feature/file/errors/FileNotFoundError.js";
 import BadAvatarError from "../../feature/user/errors/BadAvatarError.js";
+import UserNotFoundError from "../../feature/user/errors/UserNotFoundError.js";
 
 export function errorHandler(err, req, res, next) {
     if (err instanceof UserAlreadyExistsError) {
@@ -32,6 +33,10 @@ export function errorHandler(err, req, res, next) {
     }
 
     if (err instanceof BadAvatarError) {
+        return res.status(err.status).json({ message: err.message });
+    }
+
+    if (err instanceof UserNotFoundError) {
         return res.status(err.status).json({ message: err.message });
     }
 
