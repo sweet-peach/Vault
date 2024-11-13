@@ -3,6 +3,7 @@ import {redirect} from "next/navigation";
 import Logo from "@/app/components/Logo/Logo";
 import styles from "./layout.module.scss";
 import ProfileDropdown from "@/app/components/ProfileDropdown/ProfileDropdown";
+import UploadFilesStatus from "@/app/(panel)/UploadFiles/UploadFilesStatus";
 
 export default async function DriveLayout({children}) {
 
@@ -20,7 +21,10 @@ export default async function DriveLayout({children}) {
                 </div>
                 <footer>
                     <Logo size="20"></Logo>
-                    <ProfileDropdown user={user}></ProfileDropdown>
+                    <div className={styles.actionTrail}>
+                        <UploadFilesStatus></UploadFilesStatus>
+                        <ProfileDropdown user={user}></ProfileDropdown>
+                    </div>
                 </footer>
         </div>
     );

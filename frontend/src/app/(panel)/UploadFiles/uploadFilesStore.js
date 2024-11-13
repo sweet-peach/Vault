@@ -10,9 +10,14 @@ const useUploadStore = create((set) => ({
         {
             id: 2,
             name: "Mania",
-            progress: 50,
+            progress: 100,
         },
     ],
+
+    setUploadFiles: (files) =>
+        set(() => ({
+            uploadFiles: files,
+        })),
 
     addUploadFile: (file) =>
         set((state) => ({

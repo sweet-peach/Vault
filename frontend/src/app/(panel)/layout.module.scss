@@ -16,3 +16,9 @@
     flex-direction: column;
     height: 100%;
 }
+
+.action-trail{
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-small);
+}

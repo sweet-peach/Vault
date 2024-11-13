@@ -1,0 +1,60 @@
+.pop-over{
+    position: absolute;
+    bottom: 150%;
+    right: 0;
+    padding: var(--space-extra-small);
+    background: var(--foreground-color);
+    border: 1px solid var(--border-color);
+    border-radius: 7px;
+    width: 300px;
+}
+.heading{
+    font-style: italic;
+    white-space: nowrap;
+    border-radius: 7px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--space-extra-small);
+    & .close-wrapper{
+        padding: var(--space-tiny);
+        background: none;
+        display: flex;
+    }
+}
+
+.icon-container{
+    position: relative;
+}
+.icon-wrapper{
+    background: none;
+    display: flex;
+    cursor: pointer;
+    color: var(--icon-color);
+    padding: var(--space-tiny);
+    & svg{
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.files-list{
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-extra-small);
+}
+
+.file{
+    display: flex;
+    justify-content: space-between;
+    & .name{
+        display: flex;
+        gap:var(--space-tiny);
+        & svg{
+            width: 20px;
+        }
+    }
+    & .progress{
+        color: var(--text-accent-color);
+    }
+}
