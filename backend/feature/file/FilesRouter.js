@@ -58,7 +58,7 @@ FilesRouter.post('/files/upload',
         directoryId: Joi.string()
     }),
     asyncWrapper(async (req, res) => {
-        const {directoryId} = req.parsedData;
+        const {directoryId, file} = req.parsedData;
         const user = req.user;
 
         const files = req?.files?.file;

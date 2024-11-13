@@ -1,15 +1,16 @@
 import axiosClient from "@/app/lib/axiosClient";
 
-class FilesService{
-    static async getFiles(directoryId){
+
+class FilesService {
+    static async getFiles(directoryId) {
         const response = await axiosClient.get('/api/files', {
-            params:{directoryId},
+            params: {directoryId},
             withCredentials: true
         })
         return response.data;
     }
 
-    static async createFolder(folderName, directoryId){
+    static async createFolder(folderName, directoryId) {
         const response = await axiosClient.post('/api/files/mkdir', {
             name: folderName,
             parentDirectoryId: directoryId
@@ -17,20 +18,16 @@ class FilesService{
         return response.data;
     }
 
-    static async uploadFiles(files){
+    static async uploadFile(file, directoryId, onUploadProgress) {
         const formData = new FormData();
-        formData.append('file',files);
-        try {
-            //TODO For each file add files upload
-            // const uploadFile = {name: file.name, progress: 0};
-
-
-
-            await FilesService.uploadFiles(selectedPicture);
-            // location.reload();
-        } catch (e) {
-            alert(`Failed to upload some files: ${e.message}`);
+        formData.append('file', file);
+        if (directoryId) {
+            formData.append('directoryId', directoryId);
         }
+        const response = await axiosClient.post("/api/files/upload", formData, {
+            onUploadProgress: onUploadProgress
+        })
+        return response.data;
     }
 
 }

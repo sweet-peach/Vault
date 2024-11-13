@@ -1,19 +1,7 @@
 import {create} from "zustand";
 
 const useUploadStore = create((set) => ({
-    uploadFiles: [
-        {
-            id: 1,
-            name: "Test",
-            progress: 20,
-        },
-        {
-            id: 2,
-            name: "Mania",
-            progress: 100,
-        },
-    ],
-
+    uploadFiles: [],
     setUploadFiles: (files) =>
         set(() => ({
             uploadFiles: files,

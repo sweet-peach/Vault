@@ -1,7 +1,7 @@
 'use client'
 import styles from "./Drive.module.scss";
 import CreateButton from "@/app/(panel)/drive/FileCreateButton/CreateButton";
-import {createContext, useEffect, useState} from "react";
+import {createContext, useCallback, useEffect, useState} from "react";
 import FilesService from "@/app/service/FilesService";
 import FilesTable from "@/app/(panel)/drive/FilesTable/FilesTable";
 import {ModalProvider} from "@/app/components/Modal/ModalContext";
@@ -12,6 +12,11 @@ export default function Drive() {
     const [directoryId, setDirectoryId] = useState(null);
     const [isGettingFiles, setIsGettingFiles] = useState(true);
     const [files, setFiles] = useState([]);
+
+    const addFile = useCallback((file)=>{
+        setFiles((prevFiles)=>[...prevFiles, file])
+    },[])
+
     useEffect(() => {
         async function fetchFiles() {
             try {
@@ -29,7 +34,7 @@ export default function Drive() {
     }, [directoryId])
 
     return (
-        <DriveContext.Provider value={{files, setFiles, directoryId, setDirectoryId}}>
+        <DriveContext.Provider value={{files, setFiles,addFile, directoryId, setDirectoryId}}>
             <ModalProvider>
                     <header className={styles.driveHeader}>
 

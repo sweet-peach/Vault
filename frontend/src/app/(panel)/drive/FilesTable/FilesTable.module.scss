@@ -2,10 +2,15 @@
     padding: var(--space-medium);
 }
 .files-list {
+    overflow-y: auto;
     height: 100%;
     & .file {
         cursor: pointer;
-
+        & p{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
         &:hover {
             background: var(--middleground-color);
         }

@@ -1,9 +1,13 @@
 'use client'
+import {v4} from 'uuid';
 import styles from "./FileCreateButton.module.scss";
-import {useEffect, useRef} from "react";
+import {useContext, useEffect, useRef} from "react";
 import Dropdown from "@/app/components/Dropdown/Dropdown";
 import {useModals} from "@/app/components/Modal/ModalContext";
 import CreateFolderModal from "@/app/(panel)/drive/FileCreateButton/CreateFolderModal/CreateFolderModal";
+import FilesService from "@/app/service/FilesService";
+import useUploadStore from "@/app/(panel)/UploadFiles/uploadFilesStore";
+import {DriveContext} from "@/app/(panel)/drive/page";
 
 export default function CreateButton() {
     const dropdown = useRef(null);
@@ -11,16 +15,44 @@ export default function CreateButton() {
     const {addModal, removeModal} = useModals();
     const createFolderModal = useRef(null);
     const fileInputRef = useRef(null);
-
+    const addUploadFile = useUploadStore((state) => state.addUploadFile);
+    const changeUploadFileProgression = useUploadStore((state) => state.changeUploadFileProgression);
+    const {directoryId, addFile} = useContext(DriveContext);
     useEffect(() => {
         addModal(<CreateFolderModal ref={createFolderModal}></CreateFolderModal>);
         return () => removeModal(<CreateFolderModal ref={createFolderModal}></CreateFolderModal>);
     }, [addModal, removeModal]);
 
-    async function handleFileUpload(event){
+    async function handleFileUpload(event) {
         const selectedFiles = event.target.files
-        if(selectedFiles.length === 0){
+        if (selectedFiles.length === 0) {
             return;
+        }
+        for (const file of selectedFiles) {
+            const uploadFile = {
+                id: v4(),
+                name: file.name,
+                progress: 0
+            }
+            addUploadFile(uploadFile);
+
+            FilesService.uploadFile(file, directoryId, progressEvent => {
+                const totalLength = progressEvent.event.lengthComputable ? progressEvent.event.total : progressEvent.event.target.getResponseHeader('content-length') || progressEvent.event.target.getResponseHeader('x-decompressed-content-length');
+                if (totalLength) {
+                    let progress = Math.round((progressEvent.loaded * 100) / totalLength);
+                    console.log(progress);
+                    changeUploadFileProgression(uploadFile.id, progress);
+                }
+            })
+                .then((files) => {
+                    for(const file of files){
+                        addFile(file);
+                    }
+                })
+                .catch((e) => {
+                    alert(`Failed to upload a file ${file.name}: ${e.message}`);
+                    //TODO Handle error
+                })
         }
     }
 
@@ -29,7 +61,7 @@ export default function CreateButton() {
         {
             icon: "<svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"currentColor\" viewBox=\"0 0 256 256\"> <path d=\"M216,72H131.31L104,44.69A15.86,15.86,0,0,0,92.69,40H40A16,16,0,0,0,24,56V200.62A15.4,15.4,0,0,0,39.38,216H216.89A15.13,15.13,0,0,0,232,200.89V88A16,16,0,0,0,216,72ZM40,56H92.69l16,16H40ZM216,200H40V88H216Z\"></path> </svg>",
             text: "create folder",
-            onClick: ()=>{
+            onClick: () => {
                 createFolderModal?.current?.setVisibility(true);
             },
             hideAfterClick: true,
@@ -37,7 +69,9 @@ export default function CreateButton() {
         {
             icon: "<svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"currentColor\" viewBox=\"0 0 256 256\"> <path d=\"M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34ZM160,51.31,188.69,80H160ZM200,216H56V40h88V88a8,8,0,0,0,8,8h48V216Zm-42.34-61.66a8,8,0,0,1,0,11.32l-24,24a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L120,164.69V120a8,8,0,0,1,16,0v44.69l10.34-10.35A8,8,0,0,1,157.66,154.34Z\"></path> </svg>",
             text: "upload file",
-            onClick: ()=>{
+            onClick: () => {
+                fileInputRef.current.value = "";
+                fileInputRef.current.click();
             },
             hideAfterClick: true,
         },

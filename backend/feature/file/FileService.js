@@ -23,7 +23,6 @@ class FileService {
 
     // TODO make possible creation of two folder with identical names
     static async createDirectory(directoryName, ownerUserId, parentDirectoryId) {
-
         const candidate = await FileModel.findOne({
             name: directoryName,
             type: "dir",
