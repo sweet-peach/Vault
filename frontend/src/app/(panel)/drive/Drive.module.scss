@@ -1,6 +1,7 @@
 .drive-header{
     display: flex;
     margin-bottom: var(--space-extra-small);
+    gap: var(--space-small);
     & .actions-trail{
         display: flex;
         gap:var(--space-tiny);
@@ -34,6 +35,9 @@
     padding: var(--space-extra-small) var(--space-small);
     & .actions-trail{
         display: flex;
+        & button{
+            padding: var(--space-extra-small) var(--space-small);
+        }
     }
 }
 
@@ -62,9 +66,38 @@
         background: none;
         color: var(--text-color-invert);
     }
+    & .search-result{
+        cursor: default;
+        color: var(--text-color-invert);
+        background: none;
+        font-style: italic;
+    }
     & .slash{
         background: none;
         color: var(--text-color-invert);
+    }
+}
+
+.search-bar{
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--background-accent-color);
+    border-radius: 100px;
+    width: 500px;
+    overflow: hidden;
+    & input{
+        padding: var(--space-tiny) var(--space-small);
+        background: none;
+        width: 100%;
+        color: var(--text-color-invert);
+    }
+
+    & svg{
+        color: var(--icon-color);
+        width: 20px;
+        height: 20px;
+        margin-right: var(--space-small);
     }
 }
 

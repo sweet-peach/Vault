@@ -12,7 +12,7 @@ function formatBytes(bytes, decimals = 2) {
 }
 
 
-export default function FilesTable({isGettingFiles}) {
+export default function FilesTable({isSearching, isGettingFiles}) {
     const {files, openDirectory} = useContext(DriveContext);
 
     function Directory({directory}){
@@ -49,7 +49,11 @@ export default function FilesTable({isGettingFiles}) {
 
     function FilesList({files}) {
         if(files.length === 0){
-            return <div className={styles.directoryEmpty}>This directory is empty</div>
+            if(isSearching){
+                return <div className={styles.directoryEmpty}>Nothing found</div>
+            } else {
+                return <div className={styles.directoryEmpty}>This directory is empty</div>
+            }
         }
         return files.map((file, index) => {
             if (file.type === 'dir') {

@@ -18,6 +18,15 @@ class FilesService {
         return response.data;
     }
 
+    static async search(fileName) {
+        const response = await axiosClient.get('/api/files/search', {
+            params:{
+                fileName: fileName
+            }
+        })
+        return response.data;
+    }
+
     static async uploadFile(file, directoryId, onUploadProgress) {
         const formData = new FormData();
         formData.append('file', file);
