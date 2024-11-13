@@ -1,5 +1,26 @@
 .drive-header{
     margin-bottom: var(--space-extra-small);
+    & .actions-trail{
+        display: flex;
+        gap:var(--space-tiny);
+        & button{
+            background: none;
+            display: flex;
+            padding: var(--space-tiny);
+            &:disabled {
+                cursor: default;
+                & svg{
+                    color: var(--icon-disabled);
+                }
+            }
+            & svg{
+                color: var(--icon-color);
+                width: 25px;
+                height: 25px;
+            }
+        }
+
+    }
 }
 .drive-container{
     overflow: hidden;
@@ -10,11 +31,12 @@
     border-radius: 25px;
     height: 100%;
     padding: var(--space-extra-small) var(--space-small);
+    & .actions-trail{
+        display: flex;
+    }
 }
 
-.actions-trail{
-    display: flex;
-}
+
 
 .drive-view{
     display: flex;
