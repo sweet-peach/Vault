@@ -1,4 +1,5 @@
 .drive-header{
+    display: flex;
     margin-bottom: var(--space-extra-small);
     & .actions-trail{
         display: flex;
@@ -45,4 +46,25 @@
     height: 100%;
 }
 
+.address-bar{
+    display: flex;
+    align-items: center;
+    background: var(--background-accent-color);
+    padding: var(--space-tiny) var(--space-small);
+    border-radius: 100px;
+    width: 100%;
+    gap: var(--space-tiny);
+    & .path-group{
+        display: flex;
+        gap: var(--space-tiny);
+    }
+    & .path{
+        background: none;
+        color: var(--text-color-invert);
+    }
+    & .slash{
+        background: none;
+        color: var(--text-color-invert);
+    }
+}
 

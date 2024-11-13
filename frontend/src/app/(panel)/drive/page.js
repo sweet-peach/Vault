@@ -52,7 +52,7 @@ export default function Drive() {
         }
     }
 
-    function openDirectory (directory) {
+    function openDirectory(directory) {
         const index = directoryTrace.findIndex((dir) => dir.id === directoryId);
         if (index !== -1) {
             setDirectoryTrace(prevTrace => [...prevTrace.slice(0, index + 1), directory]);
@@ -112,6 +112,21 @@ export default function Drive() {
                                     d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"></path>
                             </svg>
                         </button>
+                    </div>
+                    <div className={styles.addressBar}>
+                        <button className={styles.path} onClick={() => {
+                            if (directoryId !== null) setDirectoryId(null)
+                        }}>home
+                        </button>
+                        <p className={styles.slash}>/</p>
+                        {directoryTrace.slice(0, directoryTraceIndex + 1).map((directory, index) => {
+                            return <div className={styles.pathGroup} key={index}>
+                                <button className={styles.path}  onClick={() => {
+                                    if (directoryId !== directory.id) setDirectoryId(directory.id)
+                                }}>{directory.name}</button>
+                                <p className={styles.slash}>/</p>
+                            </div>
+                        })}
                     </div>
                 </header>
                 <div className={styles.driveContainer}>
