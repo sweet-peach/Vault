@@ -15,6 +15,24 @@ if (!fs.existsSync(filesRootDir)) {
     fs.mkdirSync(filesRootDir, { recursive: true });
 }
 
+function filesToDTO(files){
+    const dataTransferObjects = []
+    for(const file of files){
+        dataTransferObjects.push(fileToDTO(file))
+    }
+    return dataTransferObjects
+}
+
+function fileToDTO(file){
+    return {
+        id: file._id,
+        name: file.name,
+        type: file.type,
+        date: file.date,
+        size: file.size
+    }
+}
+
 class FileService {
     static async createUserDirectory(userId) {
         const userDirPath = path.join(filesRootDir, userId);
@@ -30,7 +48,7 @@ class FileService {
         }).exec();
 
         if(candidate){
-            return candidate;
+            return fileToDTO(candidate);
         }
 
         const newDirectory = new FileModel({
@@ -56,7 +74,7 @@ class FileService {
         fs.mkdirSync(serverPath);
 
         await newDirectory.save();
-        return newDirectory;
+        return fileToDTO(newDirectory);
     }
 
     static async listDirectory(directoryId, userId, sort) {
@@ -76,7 +94,7 @@ class FileService {
                 files = await FileModel.find({user: userId, parent: directoryId}).exec();
         }
 
-        return files;
+        return filesToDTO(files);
     }
     static async uploadFile(file,userId, directoryId) {
         const parentDirectory = directoryId ? await FileModel.findOne({user: userId, _id: directoryId}).exec() : null;
@@ -116,21 +134,21 @@ class FileService {
         await createdFile.save();
         await user.save();
 
-        return createdFile;
+        return fileToDTO(createdFile);
     }
     static async getFile(fileId, ownerId) {
         const file = await FileModel.findOne({user: ownerId, _id: fileId}).exec();
         if(!file){
             throw new FileNotFoundError("File not found");
         }
-        return file;
+        return fileToDTO(file);
     }
 
     static async getFilesByName(searchName, ownerId) {
         let files = await FileModel.find({user: ownerId}).exec();
         files = files.filter(file => file.name.includes(searchName));
 
-        return files;
+        return filesToDTO(files);
     }
     static getFilePath(file) {
         return path.join(filesRootDir,file.user.toString(),file.path);

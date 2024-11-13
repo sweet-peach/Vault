@@ -13,7 +13,6 @@ export default async function DriveLayout({children}) {
         redirect('/auth');
     }
 
-
     return (
         <div className={styles.container}>
                 <div className={styles.content}>

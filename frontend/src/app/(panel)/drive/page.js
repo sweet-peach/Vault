@@ -12,6 +12,51 @@ export default function Drive() {
     const [directoryId, setDirectoryId] = useState(null);
     const [isGettingFiles, setIsGettingFiles] = useState(true);
     const [files, setFiles] = useState([]);
+    const [directoryTrace, setDirectoryTrace] = useState([]);
+
+    useEffect(()=>{
+        document.addEventListener("mouseup", handleMouse);
+        return ()=>{
+            document.removeEventListener("mouseup", handleMouse)
+        }
+    })
+
+    const goBack = () => {
+        const index = directoryTrace.findIndex((directory) => directory.id === directoryId);
+        if(index === -1) return
+        if (index === 0) {
+            setDirectoryId(null)
+        } else{
+            setDirectoryId(directoryTrace[index - 1].id);
+        }
+    };
+
+    function goForward() {
+        const index = directoryTrace.findIndex((directory) => directory.id === directoryId);
+        if (index !== directoryTrace.length - 1) {
+            setDirectoryId(directoryTrace[index + 1].id);
+        }
+    }
+
+    function handleMouse(event){
+        if (event.button === 3) {
+            event.preventDefault();
+            goBack();
+        } else if (event.button === 4) {
+            event.preventDefault();
+            goForward();
+        }
+    }
+
+    const openDirectory = useCallback((directory) => {
+        const index = directoryTrace.findIndex((dir) => dir.id === directoryId);
+        if (index !== -1) {
+            setDirectoryTrace(prevTrace => [...prevTrace.slice(0, index + 1), directory]);
+        } else {
+            setDirectoryTrace(prevValue => [...prevValue, directory]);
+        }
+        setDirectoryId(directory.id);
+    }, [directoryTrace, directoryId]);
 
     const addFile = useCallback((file)=>{
         setFiles((prevFiles)=>[...prevFiles, file])
@@ -34,7 +79,7 @@ export default function Drive() {
     }, [directoryId])
 
     return (
-        <DriveContext.Provider value={{files, setFiles,addFile, directoryId, setDirectoryId}}>
+        <DriveContext.Provider value={{files, setFiles,addFile, directoryId, openDirectory}}>
             <ModalProvider>
                     <header className={styles.driveHeader}>
 

@@ -53,7 +53,7 @@ function RegisterForm({setStep, email, router}) {
                     <SubmitButton formRef={formRef} text={"Register"}/>
                     <button onClick={() => {
                         setStep("email")
-                    }} className="outline full">Back
+                    }} className="outline full center">Back
                     </button>
                 </div>
             </form>
@@ -80,7 +80,7 @@ function LoginForm({setStep, email, router}) {
                     <SubmitButton text={"Login"}/>
                     <button onClick={() => {
                         setStep("email")
-                    }} className="outline full">Back
+                    }} className="outline full center">Back
                     </button>
                 </div>
             </form>
@@ -92,7 +92,7 @@ function LoginForm({setStep, email, router}) {
 function SubmitButton({text}) {
     const {pending} = useFormStatus()
     return (
-        <button className="primary full" disabled={pending} type="submit">
+        <button className="primary full center" disabled={pending} type="submit">
             {pending ? "Loading..." : text}
         </button>
     )
