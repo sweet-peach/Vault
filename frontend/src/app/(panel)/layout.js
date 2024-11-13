@@ -12,15 +12,16 @@ export default async function DriveLayout({children}) {
         redirect('/auth');
     }
 
+
     return (
         <div className={styles.container}>
-            <div className={styles.content}>
-                {children}
-            </div>
-            <footer>
-                <Logo size="20"></Logo>
-                <ProfileDropdown user={user}></ProfileDropdown>
-            </footer>
+                <div className={styles.content}>
+                    {children}
+                </div>
+                <footer>
+                    <Logo size="20"></Logo>
+                    <ProfileDropdown user={user}></ProfileDropdown>
+                </footer>
         </div>
     );
 }

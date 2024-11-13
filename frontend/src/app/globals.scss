@@ -1,5 +1,6 @@
 @use './styles/colors';
 @use './styles/typography';
+@use './styles/dropdown';
 
 * {
     margin: 0;
@@ -42,6 +43,14 @@ input[type="text"],input[type="password"]{
         background: var(--input-primary-background);
         border-radius: 100px;
     }
+    &.secondary{
+        background: var(--input-primary-background);
+        border-radius: 7px;
+        padding: var(--space-small);
+    }
+    &.full{
+        width: 100%;
+    }
 
 }
 
@@ -49,11 +58,23 @@ button{
     outline: none;
     border: none;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-extra-small);
+
+    &.center{
+        justify-content: center;
+    }
+
+    & svg{
+        width: 15px;
+        height: 15px;
+    }
 
     &.primary{
         background: var(--button-primary-background);
         color: var(--text-color-invert);
-        padding: var(--space-small) ;
+        padding: var(--space-extra-small) var(--space-small);
         border-radius: 7px;
     }
 
@@ -74,7 +95,7 @@ button{
     &.text{
         background: none;
         color: var(--text-color);
-        padding: var(--space-small) ;
+        padding: var(--space-tiny) calc(var(--space-medium));
         cursor: pointer;
     }
     &.round{
@@ -91,5 +112,10 @@ button{
     &:disabled {
         cursor: not-allowed;
         opacity: 0.6;
+    }
+}
+form{
+    & .error{
+        color: var(--error-color);
     }
 }

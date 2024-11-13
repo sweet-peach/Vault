@@ -1,0 +1,26 @@
+.dropdown{
+    background: var(--foreground-color);
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-tiny);
+    padding: var(--space-tiny);
+    border-radius: 7px;
+
+    & .dropdown-element{
+        background: none;
+        white-space: nowrap;
+        &:hover{
+            background: var(--background-color);
+            color: var(--text-color-invert);
+            border-radius: 4px;
+        }
+        display: flex;
+        align-items: center;
+        gap: var(--space-tiny);
+        padding: var(--space-extra-small);
+        & svg{
+            width: 20px;
+        }
+    }
+}

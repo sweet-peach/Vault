@@ -1,0 +1,22 @@
+.drive-header{
+    margin-bottom: var(--space-extra-small);
+}
+.drive-container{
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-medium);
+    background: var(--foreground-color);
+    border-radius: 25px;
+    height: 100%;
+    padding: var(--space-extra-small) var(--space-small);
+}
+
+.actions-trail{
+    display: flex;
+}
+
+.drive-view{
+    height: 100%;
+}
+
+

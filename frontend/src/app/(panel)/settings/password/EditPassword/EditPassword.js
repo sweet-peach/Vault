@@ -38,7 +38,7 @@ async function changePassword(state, formData) {
 function SubmitButton({text}) {
     const {pending} = useFormStatus()
     return (
-        <button className="primary round" disabled={pending} type="submit">
+        <button className="primary round center" disabled={pending} type="submit">
             {pending ? "Loading..." : text}
         </button>
     )

@@ -5,7 +5,6 @@
     align-items: center;
     & img{
         border-radius: 100%;
-        margin-right: var(--space-tiny);
     }
 }
 .profile-dropdown-container{
@@ -17,26 +16,4 @@
     bottom: 150%;
     right: 0;
     left: 0;
-    background: var(--middleground-color);
-    box-sizing: content-box;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-tiny);
-    padding: var(--space-tiny);
-    border-radius: 7px;
-}
-
-.dropdown-element{
-    &:hover{
-        background: var(--background-color);
-        color: var(--text-color-invert);
-        border-radius: 4px;
-    }
-    display: flex;
-    align-items: center;
-    gap: var(--space-tiny);
-    padding: var(--space-extra-small);
-    & svg{
-        width: 20px;
-    }
 }

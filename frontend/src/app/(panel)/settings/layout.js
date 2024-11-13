@@ -4,7 +4,6 @@ import {usePathname} from "next/navigation";
 
 export default function SettingsLayout({children}) {
     const pathname = usePathname();
-    console.log(pathname);
 
     const settingsItems = [
         {

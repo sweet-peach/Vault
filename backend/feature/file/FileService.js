@@ -9,7 +9,7 @@ import FileNotFoundError from "./errors/FileNotFoundError.js";
 import config from "../../core/config.js";
 
 const baseDir = getBaseDirectory();
-const filesRootDir = config.avatars_directory || path.join(baseDir, 'files');
+const filesRootDir = config.files_directory || path.join(baseDir, 'files');
 
 if (!fs.existsSync(filesRootDir)) {
     fs.mkdirSync(filesRootDir, { recursive: true });
@@ -21,6 +21,7 @@ class FileService {
         fs.mkdirSync(userDirPath);
     }
 
+    // TODO make possible creation of two folder with identical names
     static async createDirectory(directoryName, ownerUserId, parentDirectoryId) {
 
         const candidate = await FileModel.findOne({
@@ -41,16 +42,19 @@ class FileService {
         });
 
         const parentDirectory = parentDirectoryId ? await FileModel.findById(parentDirectoryId).exec() : null;
+        let serverPath = path.join(filesRootDir,ownerUserId);
 
         if (parentDirectory) {
-            newDirectory.path = path.join(parentDirectory.path, newDirectory.name);
+            serverPath = path.join(serverPath, parentDirectory.path, directoryName);
+            newDirectory.path = path.join(parentDirectory.path, directoryName);
             parentDirectory.childs.push(newDirectory._id);
             await parentDirectory.save();
         } else {
+            serverPath = path.join(serverPath, directoryName);
             newDirectory.path = directoryName;
         }
 
-        fs.mkdirSync(newDirectory.path);
+        fs.mkdirSync(serverPath);
 
         await newDirectory.save();
         return newDirectory;

@@ -1,0 +1,36 @@
+.loader-wrapper{
+    padding: var(--space-medium);
+}
+.files-list {
+    height: 100%;
+    & .file {
+        cursor: pointer;
+
+        &:hover {
+            background: var(--middleground-color);
+        }
+
+        padding: var(--space-extra-small) 0;
+        border-bottom: 1px solid var(--border-color);
+
+        svg {
+            justify-self: center;
+            width: 30px;
+            height: 30px;
+        }
+
+        p {
+            align-self: center;
+        }
+    }
+}
+
+.grid{
+    display: grid;
+    grid-template-columns: 60px 4fr 2fr repeat(2, 1fr) ;
+}
+
+.table-header {
+    padding-bottom: var(--space-extra-small);
+    border-bottom: 1px solid var(--border-color);
+}

@@ -12,7 +12,7 @@ FilesRouter.post('/files/mkdir',
     authorizationMiddleware,
     validateRequest({
         name: Joi.string().required(),
-        parentDirectoryId: Joi.string()
+        parentDirectoryId: Joi.any()
     }),
     asyncWrapper(async (req, res) => {
         const {name, parentDirectoryId} = req.parsedData;
@@ -61,7 +61,7 @@ FilesRouter.post('/files/upload',
         const {directoryId} = req.parsedData;
         const user = req.user;
 
-        const files = req.files.file;
+        const files = req?.files?.file;
         if (!files) {
             throw new NoFileProvided("No file provided");
         }

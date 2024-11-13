@@ -1,0 +1,33 @@
+.modal-container{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.5);
+}
+
+.modal-wrapper{
+    width: 300px;
+    background: var(--foreground-color);
+    border-radius: 7px;
+    padding: var(--space-small);
+}
+
+.content{
+    padding: var(--space-small) 0;
+}
+
+.heading{
+    font-style: italic;
+}
+
+.actions{
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: var(--space-tiny);
+}
