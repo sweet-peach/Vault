@@ -21,7 +21,7 @@ export default function Drive() {
         }
     })
 
-    const goBack = () => {
+    function goBack (){
         const index = directoryTrace.findIndex((directory) => directory.id === directoryId);
         if(index === -1) return
         if (index === 0) {
@@ -29,7 +29,7 @@ export default function Drive() {
         } else{
             setDirectoryId(directoryTrace[index - 1].id);
         }
-    };
+    }
 
     function goForward() {
         const index = directoryTrace.findIndex((directory) => directory.id === directoryId);
