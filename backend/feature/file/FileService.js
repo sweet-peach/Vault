@@ -7,9 +7,12 @@ import NoSpaceOnDiskError from "./errors/NoSpaceOnDiskError.js";
 import FileAlreadyExists from "./errors/FileAlreadyExists.js";
 import FileNotFoundError from "./errors/FileNotFoundError.js";
 import config from "../../core/config.js";
+import UserNotFoundError from "../user/errors/UserNotFoundError.js";
 
 const baseDir = getBaseDirectory();
 const filesRootDir = config.files_directory || path.join(baseDir, 'files');
+
+// TODO implement transactions
 
 if (!fs.existsSync(filesRootDir)) {
     fs.mkdirSync(filesRootDir, { recursive: true });
@@ -39,12 +42,38 @@ class FileService {
         fs.mkdirSync(userDirPath);
     }
 
-    // TODO make possible creation of two folder with identical names
+    // TODO remake
+    static async deleteFile(fileId, ownerId){
+        const user = await UserModel.findById(ownerId).exec();
+        if(!user){
+            throw new UserNotFoundError("File owner not found");
+        }
+        const file = await FileModel.findOne({
+            user: ownerId,
+            _id: fileId
+        }).exec();
+        if(!file) return;
+        const children = file.childs;
+        for(const child of children){
+            await this.deleteFile(child._id, ownerId);
+        }
+        if (file.type === 'dir') {
+            await fs.rmdirSync(this.getFilePath(file));
+        } else {
+            await fs.unlinkSync(this.getFilePath(file));
+        }
+        user.usedSpace = user.usedSpace - file.size;
+        await user.save();
+        await FileModel.findByIdAndDelete(fileId);
+    }
+
+    // TODO make possible creation of two folders with identical names
     static async createDirectory(directoryName, ownerUserId, parentDirectoryId) {
         const candidate = await FileModel.findOne({
             name: directoryName,
             type: "dir",
-            parent: parentDirectoryId
+            parent: parentDirectoryId,
+            user: ownerUserId
         }).exec();
 
         if(candidate){
@@ -127,21 +156,28 @@ class FileService {
             type: type,
             size: file.size,
             path: filePath.toString(),
-            parent: parentDirectory?._id,
+            parent: directoryId,
             user: userId
         })
-
         await createdFile.save();
+        if(parentDirectory) {
+            parentDirectory.childs.push(createdFile._id)
+            await parentDirectory.save();
+        }
         await user.save();
 
         return fileToDTO(createdFile);
     }
-    static async getFile(fileId, ownerId) {
+    static async getFile(fileId, ownerId, dto = true) {
         const file = await FileModel.findOne({user: ownerId, _id: fileId}).exec();
         if(!file){
             throw new FileNotFoundError("File not found");
         }
-        return fileToDTO(file);
+        if(dto){
+            return fileToDTO(file);
+        } else {
+            return file;
+        }
     }
 
     static async getFilesByName(searchName, ownerId) {

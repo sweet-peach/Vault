@@ -57,6 +57,30 @@ export default function Drive() {
         }
     }
 
+    async function deleteFile(fileId){
+        try {
+            await FilesService.delete(fileId)
+            setFiles((prevFile) => prevFile.filter((file)=> file.id !== fileId))
+        } catch (e) {
+            alert(`Delete of file failed: ${e.message}`)
+        }
+    }
+
+    async function downloadFile(file){
+        try {
+            const blob = await FilesService.download(file.id)
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = downloadUrl
+            link.download = file.name
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (e) {
+            alert(`Download of file failed: ${e.message}`)
+        }
+    }
+
     function openDirectory(directory) {
         const index = directoryTrace.findIndex((dir) => dir.id === directoryId);
         if (index !== -1) {
@@ -131,7 +155,7 @@ export default function Drive() {
     }
 
     return (
-        <DriveContext.Provider value={{files, setFiles, addFile, directoryId, openDirectory, showContextMenu, setIgnoreFileMenuContextRefs}}>
+        <DriveContext.Provider value={{files, setFiles, addFile, directoryId,deleteFile, downloadFile, openDirectory, showContextMenu, setIgnoreFileMenuContextRefs}}>
             <ModalProvider>
                 <header className={styles.driveHeader}>
                     <div className={styles.actionsTrail}>

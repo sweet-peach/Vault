@@ -10,6 +10,16 @@ class FilesService {
         return response.data;
     }
 
+    static async delete(fileId){
+        const response = await axiosClient.delete('/api/file',{
+            params:{
+                fileId: fileId
+            }
+        })
+
+        return response.data;
+    }
+
     static async createFolder(folderName, directoryId) {
         const response = await axiosClient.post('/api/files/mkdir', {
             name: folderName,
@@ -35,6 +45,16 @@ class FilesService {
         }
         const response = await axiosClient.post("/api/files/upload", formData, {
             onUploadProgress: onUploadProgress
+        })
+        return response.data;
+    }
+
+    static async download(fileId) {
+        const response = await axiosClient.get("/api/files/download", {
+            params:{
+                fileId: fileId
+            },
+            responseType: 'blob'
         })
         return response.data;
     }

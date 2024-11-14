@@ -5,6 +5,7 @@ import validateRequest from "../../core/middleware/validateRequest.js";
 import FileService from "./FileService.js";
 import Joi from "joi";
 import NoFileProvided from "./errors/NoFileProvided.js";
+import FileNotFoundError from "./errors/FileNotFoundError.js";
 
 const FilesRouter = new Router();
 
@@ -37,18 +38,17 @@ FilesRouter.get('/files',
     })
 )
 
-FilesRouter.get('/files',
+FilesRouter.delete('/file',
     authorizationMiddleware,
     validateRequest({
-        directoryId: Joi.string(),
-        sort: Joi.string()
+        fileId: Joi.string().required(),
     }),
     asyncWrapper(async (req, res) => {
-        const {directoryId, sort} = req.parsedData;
+        const {fileId} = req.parsedData;
         const user = req.user;
 
-        const files = await FileService.listDirectory(directoryId, user.id);
-        res.json(files);
+        const files = await FileService.deleteFile(fileId,user.id);
+        res.json({message: "ok"});
     })
 )
 
@@ -88,7 +88,7 @@ FilesRouter.get('/files/download',
     asyncWrapper(async (req, res)=>{
         const {fileId} = req.parsedData;
         const user = req.user;
-        const file = await FileService.getFile(fileId, user.id);
+        const file = await FileService.getFile(fileId, user.id, false);
         const path = FileService.getFilePath(file);
         return res.download(path, file.name);
     })

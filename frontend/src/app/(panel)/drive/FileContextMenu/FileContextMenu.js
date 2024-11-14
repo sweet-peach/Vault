@@ -1,5 +1,6 @@
 import styles from "./FileContextMenu.module.scss";
-import {useEffect, useImperativeHandle, useLayoutEffect, useRef, useState} from "react";
+import {useContext, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState} from "react";
+import {DriveContext} from "@/app/(panel)/drive/page";
 
 function throttle(func, limit) {
     let lastFunc;
@@ -22,7 +23,13 @@ function throttle(func, limit) {
     }
 }
 
+// TODO make them disappear after cursor goes out or window changes
+// TODO dropdown element and modal share same styles
+// TODO make delete change cancelable in 10 seconds
+// TODO implement use optimistic
 export default function FileContextMenu({ref, ignoreRefs = []}) {
+    const {deleteFile, downloadFile} = useContext(DriveContext);
+
     const [file, setFile] = useState(null);
 
     const [isVisible, setVisibility] = useState(false);
@@ -32,7 +39,7 @@ export default function FileContextMenu({ref, ignoreRefs = []}) {
     const [callerEvent, setCallerEvent] = useState(null);
     const callerEventRef = useRef(null);
 
-    const contextMenuRef = useRef(null);
+    const contextMenuRef = useRef(null);;
 
     useLayoutEffect(() => {
         if (!contextMenuRef?.current) return;
@@ -41,7 +48,6 @@ export default function FileContextMenu({ref, ignoreRefs = []}) {
     }, [isVisible]);
 
     useLayoutEffect(() => {
-        console.log("adj")
         if (!dimensions || !callerEventRef.current) return;
         adjustPosition();
     }, [dimensions, callerEventRef.current]);
@@ -98,12 +104,10 @@ export default function FileContextMenu({ref, ignoreRefs = []}) {
 
     useEffect(() => {
         if (isVisible) {
-            console.log("Created");
             document.addEventListener('mousedown', handleMouseDown, true);
             document.addEventListener('mouseup', handleMouseUp, true);
             window.addEventListener('resize', adjustPosition);
             return () => {
-                console.log("Destroyed");
                 document.removeEventListener('mousedown', handleMouseDown, true);
                 document.removeEventListener('mouseup', handleMouseUp, true);
                 window.removeEventListener('resize', adjustPosition);
@@ -130,9 +134,22 @@ export default function FileContextMenu({ref, ignoreRefs = []}) {
                 className={styles.contextMenu}
                 style={{top: `${position.y}px`, left: `${position.x}px`}}
             >
-                <div>
-                    test
-                </div>
+                <button onClick={()=>{downloadFile(file);setVisibility(false)}} disabled={file.type === "dir"} className={styles.contextButton}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                         viewBox="0 0 256 256">
+                        <path
+                            d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"></path>
+                    </svg>
+                    download
+                </button>
+                <button onClick={()=>{deleteFile(file.id);setVisibility(false)}} className={`${styles.delete} ${styles.contextButton}`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                         viewBox="0 0 256 256">
+                        <path
+                            d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path>
+                    </svg>
+                    delete
+                </button>
             </div>
         )
     }
