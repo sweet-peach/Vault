@@ -37,7 +37,6 @@ export default function CreateFolderModal({ref}) {
             setFiles([...files, newDirectory]);
             setVisibility(false);
         } catch (e) {
-            console.log(e);
             alert(`Failed to create a folder: ${e.message}`)
             return {}
         }

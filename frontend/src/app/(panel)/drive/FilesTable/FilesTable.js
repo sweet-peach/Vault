@@ -1,6 +1,6 @@
 import styles from "./FilesTable.module.scss";
 import Loader from "@/app/components/Loader/Loader";
-import {useContext} from "react";
+import {useContext, useEffect, useRef} from "react";
 import {DriveContext} from "@/app/(panel)/drive/page";
 
 function formatBytes(bytes, decimals = 2) {
@@ -13,11 +13,21 @@ function formatBytes(bytes, decimals = 2) {
 
 
 export default function FilesTable({isSearching, isGettingFiles}) {
-    const {files, openDirectory} = useContext(DriveContext);
+    const {files, openDirectory, showContextMenu, setIgnoreFileMenuContextRefs} = useContext(DriveContext);
+    const ignoreRef = useRef(null)
+    function handleContextMenu (event, file){
+        event.preventDefault();
+        const parentNode = event.currentTarget;
+        showContextMenu(event,parentNode,file)
+    };
+
+    useEffect(()=>{
+        setIgnoreFileMenuContextRefs([ignoreRef])
+    },[ignoreRef])
 
     function Directory({directory}){
         return (
-            <div onClick={()=>{openDirectory(directory)}} className={`${styles.file} ${styles.grid}`}>
+            <div onContextMenu={(event)=>{ handleContextMenu(event, directory)}} onClick={()=>{openDirectory(directory)}} className={`${styles.file} ${styles.grid}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                      viewBox="0 0 256 256">
                     <path
@@ -33,7 +43,7 @@ export default function FilesTable({isSearching, isGettingFiles}) {
 
     function File({file}) {
         return (
-            <div className={`${styles.file} ${styles.grid}`}>
+            <div onContextMenu={(event)=>{ event.preventDefault(); handleContextMenu(event, file)}} className={`${styles.file} ${styles.grid}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                      viewBox="0 0 256 256">
                     <path
@@ -73,7 +83,7 @@ export default function FilesTable({isSearching, isGettingFiles}) {
                 <p>Type</p>
                 <p>Size</p>
             </header>
-            <div className={styles.filesList}>
+            <div ref={ignoreRef} className={styles.filesList}>
             {isGettingFiles ?
                     <div className={styles.loaderWrapper}>
                         <Loader scale="1"></Loader>

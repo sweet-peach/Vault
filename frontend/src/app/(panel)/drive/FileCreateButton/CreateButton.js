@@ -40,7 +40,6 @@ export default function CreateButton() {
                 const totalLength = progressEvent.event.lengthComputable ? progressEvent.event.total : progressEvent.event.target.getResponseHeader('content-length') || progressEvent.event.target.getResponseHeader('x-decompressed-content-length');
                 if (totalLength) {
                     let progress = Math.round((progressEvent.loaded * 100) / totalLength);
-                    console.log(progress);
                     changeUploadFileProgression(uploadFile.id, progress);
                 }
             })

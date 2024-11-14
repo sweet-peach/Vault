@@ -1,10 +1,11 @@
 'use client'
 import styles from "./Drive.module.scss";
 import CreateButton from "@/app/(panel)/drive/FileCreateButton/CreateButton";
-import {createContext, useCallback, useEffect, useState} from "react";
+import {createContext, useCallback, useEffect, useRef, useState} from "react";
 import FilesService from "@/app/service/FilesService";
 import FilesTable from "@/app/(panel)/drive/FilesTable/FilesTable";
 import {ModalProvider} from "@/app/components/Modal/ModalContext";
+import FileContextMenu from "@/app/(panel)/drive/FileContextMenu/FileContextMenu";
 
 export const DriveContext = createContext();
 
@@ -13,7 +14,11 @@ export default function Drive() {
     const [isGettingFiles, setIsGettingFiles] = useState(true);
     const [files, setFiles] = useState([]);
     const [directoryTrace, setDirectoryTrace] = useState([]);
+    const [ignoreFileMenuContextRefs, setIgnoreFileMenuContextRefs] = useState([]);
     const [isSearching, setSearching] = useState(false);
+    const fileContextMenu = useRef(null);
+
+
 
     useEffect(() => {
         document.addEventListener("mouseup", handleMouse);
@@ -36,7 +41,6 @@ export default function Drive() {
     }
 
     function goForward() {
-        console.log(directoryTraceIndex)
         if (isGoForwardDisabled) {
             return
         }
@@ -119,8 +123,15 @@ export default function Drive() {
         },400)
     }
 
+    function showContextMenu(event,callerNode,file){
+        if(!fileContextMenu.current){
+            return
+        }
+        fileContextMenu.current.callContextMenu(event,file);
+    }
+
     return (
-        <DriveContext.Provider value={{files, setFiles, addFile, directoryId, openDirectory}}>
+        <DriveContext.Provider value={{files, setFiles, addFile, directoryId, openDirectory, showContextMenu, setIgnoreFileMenuContextRefs}}>
             <ModalProvider>
                 <header className={styles.driveHeader}>
                     <div className={styles.actionsTrail}>
@@ -183,6 +194,11 @@ export default function Drive() {
                         <FilesTable isSearching={isSearching} isGettingFiles={isGettingFiles}></FilesTable>
                     </div>
                 </div>
+                <FileContextMenu
+                    ref={fileContextMenu}
+                    ignoreRefs={ignoreFileMenuContextRefs}
+                >
+                </FileContextMenu>
             </ModalProvider>
         </DriveContext.Provider>
     );

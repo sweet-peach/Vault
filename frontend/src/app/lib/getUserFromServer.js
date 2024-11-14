@@ -2,12 +2,10 @@ import axios from "axios";
 import {cookies} from "next/headers";
 
 axios.interceptors.request.use((request) => {
-    console.log('Starting Request');
     return request;
 });
 
 axios.interceptors.response.use((response) => {
-    console.log('Response:' );
     return response;
 });
 
