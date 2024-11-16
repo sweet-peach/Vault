@@ -1,5 +1,4 @@
 import FileModel from "./FileModel.js";
-import { getBaseDirectory } from "../../index.js";
 import path from "node:path";
 import * as fs from "node:fs";
 import UserModel from "../user/UserModel.js";
@@ -8,6 +7,7 @@ import FileAlreadyExists from "./errors/FileAlreadyExists.js";
 import FileNotFoundError from "./errors/FileNotFoundError.js";
 import config from "../../core/config.js";
 import UserNotFoundError from "../user/errors/UserNotFoundError.js";
+import {getBaseDirectory} from "../../app.js";
 
 const baseDir = getBaseDirectory();
 const filesRootDir = config.files_directory || path.join(baseDir, 'files');

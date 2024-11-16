@@ -13,8 +13,8 @@ router.post('/check-email-existence', validateRequest(
             email: Joi.string().email().required(),
         }),
     asyncWrapper(async (req, res) => {
-        const {email} = req.parsedData;
-
+        let {email} = req.parsedData;
+        email = email.trim().toLocaleLowerCase();
         const candidate = await UserModel.findOne({email: email}).exec();
 
         if (candidate) {
@@ -31,7 +31,7 @@ router.post('/login', validateRequest(
             password: Joi.string().required()
         }),
     asyncWrapper(async (req, res) => {
-        const {email, password} = req.parsedData;
+        let {email, password} = req.parsedData;
         const response = await AuthenticationService.login(email, password);
         const {token, expiresAt} = response.token;
 

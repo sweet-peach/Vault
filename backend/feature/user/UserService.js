@@ -3,7 +3,6 @@ import UserModel from "./UserModel.js";
 import config from "../../core/config.js";
 import path from "node:path";
 import fs from "node:fs";
-import {getBaseDirectory} from "../../index.js";
 import {v4} from "uuid";
 import InvalidCredentials from "../authentication/errors/InvalidCredentials.js";
 import UserNotFoundError from "./errors/UserNotFoundError.js";

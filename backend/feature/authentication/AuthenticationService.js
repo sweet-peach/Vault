@@ -19,8 +19,13 @@ function createToken(userId){
     }
 }
 
+function normalizeEmail(email) {
+    return email.trim().toLowerCase();
+}
+
 class AuthenticationService{
     static async login(email, password){
+        email = normalizeEmail(email);
         const user = await UserModel.findOne({email: email}).exec();
         if(!user){
             throw new InvalidCredentials("Invalid user credentials");
@@ -45,6 +50,7 @@ class AuthenticationService{
         };
     }
     static async register(email, password){
+        email = normalizeEmail(email);
         const candidate = await UserModel.findOne({email}).exec();
         if(candidate){
             throw new UserAlreadyExistsError(`User with email ${email} already exist`)

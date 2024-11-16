@@ -1,5 +1,5 @@
 import path from "node:path";
-import {getBaseDirectory} from "../index.js";
+import {getBaseDirectory} from "../app.js";
 const baseDir = getBaseDirectory();
 
 const config = {
