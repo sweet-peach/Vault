@@ -1,27 +1,17 @@
-import { MongoMemoryServer } from "mongodb-memory-server";
 import { describe, it, before } from 'mocha';
 import { expect } from 'chai';
-import mongoose from "mongoose";
 import "dotenv/config";
 import request from "supertest";
 import app from "../app.js";
 import UserModel from "../feature/user/UserModel.js";
 import bcrypt from 'bcryptjs';
+import baseConfigurationWrapper from "./helpers/baseConfigurationWrapper.js";
 
-describe('POST Check email existence', () => {
+describe('POST Check email existence', baseConfigurationWrapper( () => {
     let mongoServer;
 
     before(async () => {
-        mongoServer = await MongoMemoryServer.create();
-        const uri = mongoServer.getUri();
-        await mongoose.connect(uri);
-
         await UserModel.create({ email: "test@example.com" });
-    });
-
-    after(async () => {
-        await mongoose.disconnect();
-        await mongoServer.stop();
     });
 
     it('should return true for an existing email', async () => {
@@ -66,29 +56,19 @@ describe('POST Check email existence', () => {
         expect(response.status).to.equal(200);
         expect(response.body.found).to.be.true;
     });
-});
+}));
 
-describe('POST Login', () => {
+describe('POST Login', baseConfigurationWrapper( () => {
     let mongoServer;
     let user;
 
     before(async () => {
-        mongoServer = await MongoMemoryServer.create();
-        const uri = mongoServer.getUri();
-        await mongoose.connect(uri);
-
         const password = 'password123';
         const hashedPassword = await bcrypt.hash(password, 10);
         user = await UserModel.create({
             email: "testuser@example.com",
             password: hashedPassword
         });
-    });
-
-
-    after(async () => {
-        await mongoose.disconnect();
-        await mongoServer.stop();
     });
 
     it('should login successfully with correct email and password', async () => {
@@ -141,29 +121,15 @@ describe('POST Login', () => {
 
         expect(response.status).to.equal(400);
     });
+}));
 
-});
-
-describe('POST Register', () => {
-    let mongoServer;
-
-    before(async () => {
-        mongoServer = await MongoMemoryServer.create();
-        const uri = mongoServer.getUri();
-        await mongoose.connect(uri);
-    });
-
-    after(async () => {
-        await mongoose.disconnect();
-        await mongoServer.stop();
-    });
-
+describe('POST Register', baseConfigurationWrapper( () => {
     it('should register successfully with valid email and password', async () => {
         const response = await request(app)
             .post('/api/register')
             .send({ email: "newuser@example.com", password: "password123" });
 
-        expect(response.status).to.equal(201); // assuming 201 is returned for successful registration
+        expect(response.status).to.equal(201);
     });
 
     it('should return 400 for missing email', async () => {
@@ -201,5 +167,5 @@ describe('POST Register', () => {
 
         expect(response.status).to.equal(409);
     });
-});
+}));
 

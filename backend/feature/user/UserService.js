@@ -33,7 +33,29 @@ if (!fs.existsSync(avatarsRootDir)) {
     fs.mkdirSync(avatarsRootDir, {recursive: true});
 }
 
+function userToDto(user){
+    return {
+        user: {
+            id: user.id,
+            email: user.email,
+            diskSpace: user.diskSpace,
+            usedSpace: user.usedSpace,
+            avatar: user.avatar
+        }
+    }
+}
+
 class UserService {
+    static async getUserById(userId,dto = true){
+        const user = await UserModel.findById(userId).exec();
+        if(!user){
+            throw new UserNotFoundError("User not found");
+        }
+        if(dto){
+            return userToDto(user)
+        }
+        return user;
+    }
 
     static async uploadAvatar(newAvatar, userId) {
         if (!validAvatarMimeTypes.includes(newAvatar.mimetype)) {

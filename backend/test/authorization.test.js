@@ -7,9 +7,10 @@ import config from "../core/config.js";
 import request from "supertest";
 import {expect} from "chai";
 import asyncWrapper from "../core/middleware/asyncWrapper.js";
+import baseConfigurationWrapper from "./helpers/baseConfigurationWrapper.js";
 
 
-describe('Check how authorization middleware work', () => {
+describe('Check of authorization middleware', baseConfigurationWrapper( () => {
     const JWT_SECRET = process.env.JWT_SECRET;
     const JWT_EXPIRATION = config.jwt_expiration_in_ms | 7 * 24 * 60 * 60 * 1000;
     let validToken;
@@ -52,4 +53,4 @@ describe('Check how authorization middleware work', () => {
 
         expect(response.status).to.equal(401);
     });
-})
+}));

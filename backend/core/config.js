@@ -14,5 +14,9 @@ if(!config.avatars_directory){
 if(!config.files_directory){
     config.files_directory = path.join(baseDir, 'files');
 }
+if(process.env.NODE_ENV === "test"){
+    config.files_directory = path.join(baseDir, 'test', 'temp', 'files');
+    config.avatars_directory = path.join(baseDir, 'test', 'temp', 'avatar');
+}
 
 export default config

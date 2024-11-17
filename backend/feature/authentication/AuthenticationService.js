@@ -73,28 +73,6 @@ class AuthenticationService{
             token: token
         };
     }
-    static async checkToken(token){
-        let decoded;
-        try {
-            decoded = jwt.verify(token, JWT_SECRET);
-        } catch (e) {
-            throw new InvalidCredentials("Invalid JWT");
-        }
-
-        const user = await UserModel.findById(decoded.id).exec();
-        if(!user){
-            throw new InvalidCredentials("Invalid JWT");
-        }
-        return {
-            user: {
-                id: user.id,
-                email: user.email,
-                diskSpace: user.diskSpace,
-                usedSpace: user.usedSpace,
-                avatar: user.avatar
-            }
-        }
-    }
 }
 
 export default AuthenticationService;

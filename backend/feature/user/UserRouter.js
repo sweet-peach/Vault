@@ -1,7 +1,6 @@
 import {Router} from "express";
 import authorizationMiddleware from "../../core/middleware/authorizationMiddleware.js";
 import asyncWrapper from "../../core/middleware/asyncWrapper.js";
-import AuthenticationService from "../authentication/AuthenticationService.js";
 import BadAvatarError from "./errors/BadAvatarError.js";
 import UserService from "./UserService.js";
 import validateRequest from "../../core/middleware/validateRequest.js";
@@ -11,11 +10,11 @@ import Joi from "joi";
 const UserRouter = new Router();
 
 UserRouter.get('/me',
+    authorizationMiddleware,
     asyncWrapper(async (req, res) => {
-        const token = req.headers.authorization.split(' ')[1]
-        const response = await AuthenticationService.checkToken(token);
+        const user = req.user;
 
-        return res.json(response);
+        return res.json(await UserService.getUserById(user.id));
     })
 )
 
