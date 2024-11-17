@@ -54,7 +54,7 @@ router.post('/register', validateRequest(
         const response = await AuthenticationService.register(email, password);
         const {token, expiresAt} = response.token;
 
-        return res.cookie('token', token, {
+        return res.status(201).cookie('token', token, {
             expires: expiresAt,
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',

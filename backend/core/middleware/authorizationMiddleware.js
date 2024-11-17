@@ -4,9 +4,7 @@ function authorizationMiddleware(req, res, next){
     if(req.method === "OPTIONS"){
         return next();
     }
-
     const cookies = req.headers.cookie;
-
     function getCookieValue(cookieName) {
         if (!cookies) return null;
 

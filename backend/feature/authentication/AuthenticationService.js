@@ -35,12 +35,11 @@ class AuthenticationService{
         if(!isPassValid){
             throw new InvalidCredentials("Invalid user credentials")
         }
-
-        const token = createToken(user.id);
+        const token = createToken(user._id);
 
         return {
             user: {
-                id: user.id,
+                id: user._id,
                 email: user.email,
                 diskSpace: user.diskSpace,
                 usedSpace: user.usedSpace,

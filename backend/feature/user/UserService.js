@@ -7,6 +7,7 @@ import {v4} from "uuid";
 import InvalidCredentials from "../authentication/errors/InvalidCredentials.js";
 import UserNotFoundError from "./errors/UserNotFoundError.js";
 import bcrypt from "bcryptjs";
+import OldPasswordDoNotMatch from "./errors/OldPasswordDoNotMatch.js";
 
 const validAvatarMimeTypes = [
     'image/jpeg',
@@ -64,7 +65,7 @@ class UserService {
         }
         const isPassValid = bcrypt.compareSync(oldPassword,user.password);
         if(!isPassValid){
-            throw new InvalidCredentials("old password isn't valid")
+            throw new OldPasswordDoNotMatch("Old password does not match the current one")
         }
         user.password = await bcrypt.hash(newPassword, 8);
         await user.save();
