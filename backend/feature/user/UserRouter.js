@@ -37,7 +37,10 @@ UserRouter.post(
     "/me/avatar/upload",
     authorizationMiddleware,
     asyncWrapper(async (req, res) => {
-        const newAvatar = req.files.file;
+        if(!req.files){
+            throw new BadAvatarError("Avatar not provided")
+        }
+        const newAvatar = req.files?.file;
         if(Array.isArray(newAvatar)){
             throw new BadAvatarError("Trying to upload multiple avatars")
         }

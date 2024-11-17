@@ -5,6 +5,7 @@ import request from "supertest";
 import app from "../app.js";
 import {expect} from "chai";
 import baseConfigurationWrapper from "./helpers/baseConfigurationWrapper.js";
+import fs from "node:fs";
 
 describe('POST Change password', baseConfigurationWrapper(() => {
     let validToken;
@@ -106,4 +107,50 @@ describe('GET Me', baseConfigurationWrapper( () => {
             }
         });
     })
+}));
+
+describe('POST Upload Avatar', baseConfigurationWrapper(() => {
+    let validToken;
+    before(async () => {
+        const {token} = await AuthenticationService.register("testuser@example.com", "password123");
+        validToken = token.token;
+    });
+
+    it('should return 200 for successful avatar upload', async () => {
+        const response = await request(app)
+            .post('/api/me/avatar/upload')
+            .set('cookie', [`token=${validToken};`])
+            .attach('file', fs.createReadStream('./test/assets/sample-avatar.png'));
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('avatarName');
+    });
+
+    it('should return 400 for uploading multiple avatars', async () => {
+        const response = await request(app)
+            .post('/api/me/avatar/upload')
+            .set('cookie', [`token=${validToken};`])
+            .attach('file', fs.createReadStream('./test/assets/sample-avatar.png'))
+            .attach('file', fs.createReadStream('./test/assets/sample-avatar-2.png'));
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.have.property('message', 'Trying to upload multiple avatars');
+    });
+
+    it('should return 401 for missing authorization token', async () => {
+        const response = await request(app)
+            .post('/api/me/avatar/upload')
+            .attach('file', fs.createReadStream('./test/assets/sample-avatar.png'));
+
+        expect(response.status).to.equal(401);
+    });
+
+    it('should return 400 for missing file', async () => {
+        const response = await request(app)
+            .post('/api/me/avatar/upload')
+            .set('cookie', [`token=${validToken};`]);
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.have.property('message', 'Avatar not provided');
+    });
 }));
