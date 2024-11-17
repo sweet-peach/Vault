@@ -154,3 +154,40 @@ describe('POST Upload Avatar', baseConfigurationWrapper(() => {
         expect(response.body).to.have.property('message', 'Avatar not provided');
     });
 }));
+
+describe('DELETE Avatar', baseConfigurationWrapper(() => {
+    let validToken;
+    before(async () => {
+        const {token, user} = await AuthenticationService.register("testuser@example.com", "password123");
+        validToken = token.token;
+
+        await request(app)
+            .post('/api/me/avatar/upload')
+            .set('cookie', [`token=${validToken};`])
+            .attach('file', './test/assets/sample-avatar.png');
+    });
+
+    it('should return 200 for successful avatar deletion', async () => {
+        const response = await request(app)
+            .delete('/api/me/avatar')
+            .set('cookie', [`token=${validToken};`]);
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('message', 'Avatar deleted');
+    });
+
+    it('should return 401 for missing authorization token', async () => {
+        const response = await request(app)
+            .delete('/api/me/avatar');
+
+        expect(response.status).to.equal(401);
+    });
+
+    it('should handle deleting an avatar that does not exist (optional)', async () => {
+        const response = await request(app)
+            .delete('/api/me/avatar')
+            .set('cookie', [`token=${validToken};`]);
+
+        expect(response.status).to.equal(200);
+    });
+}));

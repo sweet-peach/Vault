@@ -9,7 +9,7 @@
     "dev": "nodemon server.js",
     "only-test": "cross-env NODE_ENV=test mocha test/*.test.js",
     "test-cleanup": "node ./test/helpers/cleanup.js",
-    "test": "npm run only-test && npm run test-cleanup"
+    "test": "npm run test-cleanup && npm run only-test"
   },
   "author": "sweet-peach",
   "license": "MIT",
