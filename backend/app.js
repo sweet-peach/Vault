@@ -15,7 +15,7 @@ const app = express();
 app.use(fileUpload({}))
 app.use(express.json());
 
-if(process.env.NODE_ENV === 'DEVELOPMENT'){
+if(process.env.NODE_ENV === 'development'){
     app.use(corsMiddleware);
 }
 app.use('/avatar/', express.static(config.avatars_directory));
